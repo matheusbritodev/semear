@@ -1,0 +1,5 @@
+# Quebras de linha LF no repositório (o .env e os scripts dependem disso)
+* text=auto eol=lf
+*.pdf binary
+*.png binary
+*.jpg binary

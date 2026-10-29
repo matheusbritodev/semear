@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+/* Identidade visual do Semear: verde (semente/crescimento) sobre neutros. */
+@theme {
+  --color-semear-50: #f1f8f2;
+  --color-semear-100: #dceedf;
+  --color-semear-200: #b9ddc0;
+  --color-semear-500: #3f9a4d;
+  --color-semear-600: #2f7d3b;
+  --color-semear-700: #256430;
+  --color-semear-800: #1d4f26;
+  --font-sans: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-slate-50 text-slate-800 antialiased;
+}

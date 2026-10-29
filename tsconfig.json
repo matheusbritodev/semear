@@ -15,8 +15,7 @@
     "skipLibCheck": true,
     "noEmit": true,
     "types": ["vite/client", "node"],
-    "baseUrl": ".",
-    "paths": { "@/*": ["src/main/view/*"] }
+    "paths": { "@/*": ["./src/main/view/*"] }
   },
   "include": ["src/main/view", "src/test/view", "vite.config.ts"]
 }

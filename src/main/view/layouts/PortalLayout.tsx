@@ -30,7 +30,8 @@ export function PortalLayout() {
               Início
             </NavLink>
             <NavLink to="/portal/pre-matricula/nova" className={estiloLink}>
-              Nova pré-matrícula
+              <span className="sm:hidden">Pré-matrícula</span>
+              <span className="hidden sm:inline">Nova pré-matrícula</span>
             </NavLink>
             <NavLink to="/portal/financeiro" className={estiloLink}>
               Financeiro

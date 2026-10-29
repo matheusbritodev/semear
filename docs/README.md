@@ -12,6 +12,7 @@ A aplicação segue o padrão **MVC**: **Model** e **Controller** em **Java**, *
 | 05 | [05-view.md](05-view.md) | View em TypeScript: rotas por perfil, telas, componentes, comunicação com os Controllers |
 | 06 | [06-supabase-conexao.md](06-supabase-conexao.md) | Situação da conexão com o projeto Supabase e o que falta configurar |
 | 07 | [07-plano-e-convencoes.md](07-plano-e-convencoes.md) | Ordem de implementação, decisões pendentes, convenções de código |
+| 09 | [09-roteiro-demonstracao.md](09-roteiro-demonstracao.md) | Roteiro da apresentação, perfil por perfil |
 | 08 | [08-entrega.md](08-entrega.md) | **Entrega:** requisitos atendidos, diagrama de classes, decisões, testes, LGPD e limitações |
 
 ## Fontes originais

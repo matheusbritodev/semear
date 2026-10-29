@@ -5,6 +5,7 @@ import { PageHeader } from '@/components/comuns/PageHeader'
 import { Tabela, Td, Th, Tr } from '@/components/comuns/Tabela'
 import { Button } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
+import { Select } from '@/components/ui/Select'
 import { useAlterarPermissoes, useMatrizPermissoes } from '@/hooks/usePendencias'
 import { usePermissao } from '@/hooks/useUtilitarios'
 import { ApiError } from '@/lib/ApiError'
@@ -28,6 +29,8 @@ export function PerfisAcessoPage() {
   const { alterar, restaurar } = useAlterarPermissoes()
   const [confirmarPadrao, setConfirmarPadrao] = useState(false)
   const [erro, setErro] = useState<string | null>(null)
+  /** No celular a matriz não cabe: mostra um perfil por vez. */
+  const [perfilCelular, setPerfilCelular] = useState<PerfilUsuario>('SECRETARIA')
 
   if (matriz.isPending) return <Carregando />
   if (matriz.isError) return <EstadoErro erro={matriz.error} aoTentarDeNovo={() => void matriz.refetch()} />
@@ -43,6 +46,30 @@ export function PerfisAcessoPage() {
     } catch (e) {
       setErro(e instanceof ApiError ? e.message : 'Não foi possível salvar a alteração.')
     }
+  }
+
+  /** Caixa "Sem acesso / Consultar / Alterar" de um perfil num módulo (mesma na matriz e na lista do celular). */
+  function seletor(perfil: PerfilUsuario, modulo: Modulo, prefixo: string) {
+    const c = celula(perfil, modulo)
+    const nivel: Nivel = c.gravar ? 'alterar' : c.ler ? 'consultar' : 'nenhum'
+    const travada = perfil === 'ADMIN' && ESSENCIAIS_ADMIN.includes(modulo)
+    const salvando = alterar.isPending && alterar.variables?.perfil === perfil && alterar.variables.modulo === modulo
+    return (
+      <select
+        id={`${prefixo}-${perfil}-${modulo}`}
+        value={nivel}
+        disabled={!podeAlterar || travada || salvando}
+        title={travada ? 'A administração sempre mantém este acesso' : undefined}
+        onChange={(e) => void mudar(perfil, modulo, e.target.value as Nivel)}
+        className={`w-full rounded-lg border px-2 py-1.5 text-sm disabled:cursor-not-allowed disabled:opacity-70 ${corNivel(nivel)}`}
+      >
+        {(Object.keys(ROTULO_NIVEL) as Nivel[]).map((n) => (
+          <option key={n} value={n}>
+            {ROTULO_NIVEL[n]}
+          </option>
+        ))}
+      </select>
+    )
   }
 
   async function voltarAoPadrao() {
@@ -81,52 +108,59 @@ export function PerfisAcessoPage() {
         </p>
       )}
 
-      <Tabela legenda="Permissões por perfil e módulo">
-        <thead>
-          <tr>
-            <Th className="sticky left-0 bg-slate-50">Módulo</Th>
+      {/* Celular: escolhe o perfil e vê a lista de módulos */}
+      <div className="md:hidden">
+        <div className="mb-3">
+          <Select rotulo="Perfil" value={perfilCelular} onChange={(e) => setPerfilCelular(e.target.value as PerfilUsuario)}>
             {perfis.map((p) => (
-              <Th key={p.perfil} className="min-w-36">
+              <option key={p.perfil} value={p.perfil}>
                 {ROTULO_PERFIL[p.perfil]}
-              </Th>
+              </option>
             ))}
-          </tr>
-        </thead>
-        <tbody>
+          </Select>
+        </div>
+        <ul className="divide-y divide-slate-100 rounded-xl border border-slate-200 bg-white">
           {modulos.map((modulo) => (
-            <Tr key={modulo}>
-              <Td className="sticky left-0 bg-white font-medium">{ROTULO_MODULO[modulo]}</Td>
-              {perfis.map(({ perfil }) => {
-                const c = celula(perfil, modulo)
-                const nivel: Nivel = c.gravar ? 'alterar' : c.ler ? 'consultar' : 'nenhum'
-                const travada = perfil === 'ADMIN' && ESSENCIAIS_ADMIN.includes(modulo)
-                const salvando = alterar.isPending && alterar.variables?.perfil === perfil && alterar.variables.modulo === modulo
-                return (
+            <li key={modulo} className="flex items-center justify-between gap-3 px-4 py-2.5">
+              <label htmlFor={`cel-${perfilCelular}-${modulo}`} className="text-sm font-medium text-slate-800">
+                {ROTULO_MODULO[modulo]}
+              </label>
+              <div className="w-36 shrink-0">{seletor(perfilCelular, modulo, 'cel')}</div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Computador: a matriz completa */}
+      <div className="hidden md:block">
+        <Tabela legenda="Permissões por perfil e módulo">
+          <thead>
+            <tr>
+              <Th className="sticky left-0 bg-slate-50">Módulo</Th>
+              {perfis.map((p) => (
+                <Th key={p.perfil} className="min-w-36">
+                  {ROTULO_PERFIL[p.perfil]}
+                </Th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {modulos.map((modulo) => (
+              <Tr key={modulo}>
+                <Td className="sticky left-0 bg-white font-medium">{ROTULO_MODULO[modulo]}</Td>
+                {perfis.map(({ perfil }) => (
                   <Td key={perfil}>
-                    <label className="sr-only" htmlFor={`${perfil}-${modulo}`}>
+                    <label className="sr-only" htmlFor={`mat-${perfil}-${modulo}`}>
                       {ROTULO_PERFIL[perfil]} em {ROTULO_MODULO[modulo]}
                     </label>
-                    <select
-                      id={`${perfil}-${modulo}`}
-                      value={nivel}
-                      disabled={!podeAlterar || travada || salvando}
-                      title={travada ? 'A administração sempre mantém este acesso' : undefined}
-                      onChange={(e) => void mudar(perfil, modulo, e.target.value as Nivel)}
-                      className={`w-full rounded-lg border px-2 py-1.5 text-sm disabled:cursor-not-allowed disabled:opacity-70 ${corNivel(nivel)}`}
-                    >
-                      {(Object.keys(ROTULO_NIVEL) as Nivel[]).map((n) => (
-                        <option key={n} value={n}>
-                          {ROTULO_NIVEL[n]}
-                        </option>
-                      ))}
-                    </select>
+                    {seletor(perfil, modulo, 'mat')}
                   </Td>
-                )
-              })}
-            </Tr>
-          ))}
-        </tbody>
-      </Tabela>
+                ))}
+              </Tr>
+            ))}
+          </tbody>
+        </Tabela>
+      </div>
       <p className="mt-3 text-xs text-slate-500">
         “Alterar” já inclui consultar. Configurações e Usuários ficam sempre liberados para a Administração.
       </p>

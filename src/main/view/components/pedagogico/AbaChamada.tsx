@@ -150,7 +150,8 @@ function FormularioChamada({ chamada }: { chamada: Chamada }) {
       </ul>
 
       {editavel && (
-        <div className="mt-4 flex flex-wrap items-center gap-3">
+        // Fixo no rodapé: com turma cheia, a professora não precisa rolar até o fim para salvar.
+        <div className="sticky bottom-0 -mx-5 mt-4 flex flex-wrap items-center gap-3 border-t border-slate-100 bg-white/95 px-5 py-3 backdrop-blur">
           <Button disabled={!conteudo.trim()} carregando={registrar.isPending} onClick={salvar}>
             {chamada.diarioId ? 'Salvar alterações' : 'Registrar diário'}
           </Button>

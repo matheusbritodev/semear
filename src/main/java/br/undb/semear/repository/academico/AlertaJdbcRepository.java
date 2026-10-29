@@ -27,10 +27,18 @@ public class AlertaJdbcRepository implements AlertaRepository {
     public List<AlertaResponse> listar(boolean apenasNaoLidos) {
         try {
             return jdbc.sql("""
-                            SELECT id, tipo, mensagem, turma_id, lido, criado_em
-                              FROM alerta_secretaria
-                             WHERE NOT :apenasNaoLidos OR NOT lido
-                             ORDER BY criado_em DESC
+                            SELECT a.id, a.tipo, a.turma_id, a.lido, a.criado_em,
+                                   -- O banco grava só a letra da turma ("A"); a tela mostra série, turma e ano.
+                                   CASE WHEN t.id IS NULL THEN a.mensagem
+                                        ELSE regexp_replace(a.mensagem, 'turma "[^"]*"',
+                                                            'turma ' || s.nome || ' ' || t.nome || ' (' || al.ano || ')')
+                                   END AS mensagem
+                              FROM alerta_secretaria a
+                              LEFT JOIN turma t ON t.id = a.turma_id
+                              LEFT JOIN serie s ON s.id = t.serie_id
+                              LEFT JOIN ano_letivo al ON al.id = t.ano_letivo_id
+                             WHERE NOT :apenasNaoLidos OR NOT a.lido
+                             ORDER BY a.criado_em DESC
                              LIMIT 50
                             """)
                     .param("apenasNaoLidos", apenasNaoLidos)

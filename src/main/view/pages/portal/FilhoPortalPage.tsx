@@ -172,17 +172,18 @@ function TabelaBoletim({ boletim: b }: { boletim: Boletim }) {
         <p className="text-sm text-slate-600">Nenhuma nota lançada ainda.</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[28rem] text-sm">
+          <table className="w-full text-xs sm:text-sm">
             <caption className="sr-only">Notas por bimestre</caption>
             <thead>
               <tr className="border-b border-slate-200 text-left text-slate-500">
                 <th className="py-2 font-medium">Disciplina</th>
                 {[1, 2, 3, 4].map((n) => (
-                  <th key={n} className="w-14 py-2 text-center font-medium">
-                    {n}º bim.
+                  <th key={n} className="w-9 py-2 text-center font-medium sm:w-14">
+                    {n}º<span className="hidden sm:inline"> bim.</span>
+                    <span className="sr-only sm:hidden"> bimestre</span>
                   </th>
                 ))}
-                <th className="w-16 py-2 text-center font-medium">Média</th>
+                <th className="w-11 py-2 text-center font-medium sm:w-16">Média</th>
               </tr>
             </thead>
             <tbody>

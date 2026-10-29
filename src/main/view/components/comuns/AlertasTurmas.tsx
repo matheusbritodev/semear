@@ -16,7 +16,10 @@ export function AlertasTurmas() {
   return (
     <section aria-label="Alertas para a secretaria" className="mb-6 space-y-2">
       {alertas.data.map((alerta) => (
-        <div key={alerta.id} className="flex flex-wrap items-center gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm">
+        <div
+          key={alerta.id}
+          className="flex flex-col items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm sm:flex-row sm:items-center sm:gap-3"
+        >
           <BellRing className="size-4 shrink-0 text-amber-600" aria-hidden />
           <p className="flex-1 text-amber-900">
             <strong className="font-semibold">Turma lotada.</strong> {alerta.mensagem}{' '}

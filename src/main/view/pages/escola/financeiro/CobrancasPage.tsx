@@ -28,7 +28,8 @@ export function CobrancasPage() {
   const corrente = useAnoCorrente()
   const [anoEscolhido, setAno] = useState<number>()
   const ano = anoEscolhido ?? corrente.data?.ano
-  const [mes, setMes] = useState<number>()
+  // Abre no mês atual: é o que o financeiro acompanha no dia a dia.
+  const [mes, setMes] = useState<number | undefined>(new Date().getMonth() + 1)
   const [tipo, setTipo] = useState<TipoCobranca>()
   const [status, setStatus] = useState<StatusCobranca>()
   const [busca, setBusca] = useState('')
@@ -62,7 +63,7 @@ export function CobrancasPage() {
       <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-end">
         <CampoBusca valor={busca} aoMudar={mudar(setBusca)} placeholder="Aluno, responsável ou nº de cadastro" />
         <SeletorAno ano={ano} aoMudar={mudar(setAno)} />
-        <div className="w-40">
+        <div className="w-full sm:w-40">
           <Select rotulo="Mês" ocultarRotulo value={mes ?? ''} onChange={(e) => mudar(setMes)(e.target.value ? Number(e.target.value) : undefined)}>
             <option value="">Todos os meses</option>
             {MESES.map((m, i) => (
@@ -72,7 +73,7 @@ export function CobrancasPage() {
             ))}
           </Select>
         </div>
-        <div className="w-48">
+        <div className="w-full sm:w-48">
           <Select rotulo="Tipo" ocultarRotulo value={tipo ?? ''} onChange={(e) => mudar(setTipo)((e.target.value || undefined) as TipoCobranca | undefined)}>
             <option value="">Todos os tipos</option>
             {(Object.keys(ROTULO_TIPO_COBRANCA) as TipoCobranca[]).map((t) => (
@@ -82,7 +83,7 @@ export function CobrancasPage() {
             ))}
           </Select>
         </div>
-        <div className="w-40">
+        <div className="w-full sm:w-40">
           <Select
             rotulo="Situação"
             ocultarRotulo
@@ -107,6 +108,37 @@ export function CobrancasPage() {
         <EstadoVazio titulo="Nenhuma cobrança encontrada" descricao="Ajuste os filtros ou gere as cobranças do período." />
       ) : (
         <>
+          <ul className={`space-y-3 md:hidden ${cobrancas.isPlaceholderData ? 'opacity-60' : ''}`} aria-label="Cobranças">
+            {cobrancas.data.itens.map((c) => (
+              <li key={c.id}>
+                <button
+                  type="button"
+                  onClick={() => setAberta(c.id)}
+                  className="w-full rounded-xl border border-slate-200 bg-white p-4 text-left hover:border-semear-200"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="font-medium text-slate-900">{c.aluno}</span>
+                    <StatusCobrancaBadge status={c.status} />
+                  </div>
+                  <p className="text-xs text-slate-500">
+                    {c.turma} · {c.responsavel}
+                  </p>
+                  <div className="mt-2 flex items-end justify-between gap-2">
+                    <span className="text-sm text-slate-600">
+                      {ROTULO_TIPO_COBRANCA[c.tipo]} · {formatarCompetencia(c.competencia)}
+                      <br />
+                      vence {formatarData(c.vencimento)}
+                      {c.diasDeAtraso > 0 && <span className="text-red-700"> · {c.diasDeAtraso} dias</span>}
+                    </span>
+                    <span className="text-lg font-semibold text-slate-900 tabular-nums">
+                      {c.status === 'PAGO' ? formatarMoeda(c.valorPago ?? c.valorHoje) : c.status === 'CANCELADO' ? '—' : formatarMoeda(c.valorHoje)}
+                    </span>
+                  </div>
+                </button>
+              </li>
+            ))}
+          </ul>
+          <div className="hidden md:block">
           <Tabela legenda="Cobranças">
             <thead>
               <tr>
@@ -153,6 +185,7 @@ export function CobrancasPage() {
               ))}
             </tbody>
           </Tabela>
+          </div>
           <Paginacao pagina={pagina} tamanho={20} total={cobrancas.data.total} aoMudar={setPagina} />
         </>
       )}

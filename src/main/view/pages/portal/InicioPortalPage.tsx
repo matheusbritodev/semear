@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { CalendarCheck, FileText, Plus, Wallet } from 'lucide-react'
+import { BookOpen, CalendarCheck, FileText, Plus, Wallet } from 'lucide-react'
 import { useAuth } from '@/auth/useAuth'
 import { Carregando, EstadoErro } from '@/components/comuns/Estados'
 import { StatusMatriculaBadge } from '@/components/comuns/StatusMatriculaBadge'
@@ -70,18 +70,20 @@ export function InicioPortalPage() {
                     matrícula. A vaga está garantida, mas a escola precisa deles.
                   </p>
                 )}
-                <Link
-                  to={`/portal/alunos/${f.alunoId}/documentos`}
-                  className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-semear-700 hover:underline"
-                >
-                  <FileText className="size-4" aria-hidden /> Documentos da matrícula
-                </Link>
-                <Link
-                  to={`/portal/alunos/${f.alunoId}`}
-                  className="mt-1 ml-4 inline-flex items-center gap-1 text-sm font-medium text-semear-700 hover:underline"
-                >
-                  Boletim, contrato e materiais
-                </Link>
+                <div className="mt-3 flex flex-col gap-1.5">
+                  <Link
+                    to={`/portal/alunos/${f.alunoId}`}
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-semear-700 hover:underline"
+                  >
+                    <BookOpen className="size-4" aria-hidden /> Boletim, contrato e materiais
+                  </Link>
+                  <Link
+                    to={`/portal/alunos/${f.alunoId}/documentos`}
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-semear-700 hover:underline"
+                  >
+                    <FileText className="size-4" aria-hidden /> Documentos da matrícula
+                  </Link>
+                </div>
               </Card>
             ))}
           </div>

@@ -59,7 +59,7 @@ export function PendenciasPage() {
 
           <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end">
             <CampoBusca valor={busca} aoMudar={setBusca} placeholder="Buscar por aluno ou responsável" />
-            <div className="sm:w-56">
+            <div className="w-full sm:w-56">
               <Select rotulo="Turma" ocultarRotulo value={turma} onChange={(e) => setTurma(e.target.value)}>
                 <option value="">Todas as turmas</option>
                 {turmas.map((t) => (
@@ -74,6 +74,43 @@ export function PendenciasPage() {
           {filtradas.length === 0 ? (
             <EstadoVazio titulo="Nada encontrado" descricao="Nenhuma pendência com esses filtros." />
           ) : (
+            <>
+            <ul className="space-y-3 md:hidden" aria-label="Alunos com documentos pendentes">
+              {filtradas.map((p) => (
+                <li key={p.alunoId} className="rounded-xl border border-slate-200 bg-white p-4">
+                  <div className="flex items-start justify-between gap-2">
+                    <Link to={`/escola/alunos/${p.alunoId}#documentos`} className="font-medium text-slate-900 hover:text-semear-700">
+                      {p.aluno}
+                    </Link>
+                    <StatusMatriculaBadge status={p.statusMatricula} />
+                  </div>
+                  <p className="text-xs text-slate-500">
+                    Nº {p.numeroCadastro} · {rotuloTurma(p)}
+                  </p>
+                  <p className="mt-2 text-xs font-medium text-red-700">
+                    Faltam {p.pendentes} {p.pendentes === 1 ? 'documento' : 'documentos'}
+                  </p>
+                  <ul className="mt-1 flex flex-wrap gap-1">
+                    {p.faltando.map((doc) => (
+                      <li key={doc}>
+                        <Badge cor="amarelo">{doc}</Badge>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-3 border-t border-slate-100 pt-2 text-sm">
+                    {p.responsavel ? (
+                      <>
+                        <p className="text-slate-800">{p.responsavel}</p>
+                        {p.telefone && <Contato pendencia={p} />}
+                      </>
+                    ) : (
+                      <Badge cor="vermelho">Responsável financeiro não definido</Badge>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <div className="hidden md:block">
             <Tabela legenda="Alunos com documentos pendentes">
               <thead>
                 <tr>
@@ -126,6 +163,8 @@ export function PendenciasPage() {
                 ))}
               </tbody>
             </Tabela>
+            </div>
+            </>
           )}
         </>
       )}

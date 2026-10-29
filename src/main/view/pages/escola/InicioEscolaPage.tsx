@@ -44,7 +44,7 @@ export function InicioEscolaPage() {
       {vePendencias && pendencias.data && pendencias.data.alunosComPendencia > 0 && (
         <Link
           to="/escola/pendencias"
-          className="group flex flex-wrap items-center gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm hover:border-red-300"
+          className="group flex flex-col items-start gap-2 rounded-xl sm:flex-row sm:items-center sm:gap-3 border border-red-200 bg-red-50 px-4 py-3 text-sm hover:border-red-300"
         >
           <FileWarning className="size-5 shrink-0 text-red-600" aria-hidden />
           <p className="flex-1 text-red-900">
@@ -72,7 +72,7 @@ export function InicioEscolaPage() {
       {veObrigacoes && obrigacoes.data && obrigacoes.data.length > 0 && (
         <Link
           to="/escola/obrigacoes"
-          className="group flex flex-wrap items-center gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm hover:border-amber-300"
+          className="group flex flex-col items-start gap-2 rounded-xl sm:flex-row sm:items-center sm:gap-3 border border-amber-200 bg-amber-50 px-4 py-3 text-sm hover:border-amber-300"
         >
           <CalendarClock className="size-5 shrink-0 text-amber-600" aria-hidden />
           <p className="flex-1 text-amber-900">
@@ -90,7 +90,7 @@ export function InicioEscolaPage() {
       {veFinanceiro && inadimplencia.data && inadimplencia.data.alunos > 0 && (
         <Link
           to="/escola/financeiro/inadimplencia"
-          className="group flex flex-wrap items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm hover:border-semear-200"
+          className="group flex flex-col items-start gap-2 rounded-xl sm:flex-row sm:items-center sm:gap-3 border border-slate-200 bg-white px-4 py-3 text-sm hover:border-semear-200"
         >
           <Landmark className="size-5 shrink-0 text-red-600" aria-hidden />
           <p className="flex-1 text-slate-700">

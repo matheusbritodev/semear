@@ -96,7 +96,8 @@ Registro completo em [02 §7](02-arquitetura.md#7-decisões-de-arquitetura-regis
 
 ## 4. Testes
 
-- **128 testes Java** (Model e Controllers), entre eles: RN04 (turma lotada), RN08/RN09 (o cálculo bate com o seed: R$ 375,00 pagos 11 dias depois = R$ 383,86), RN11/RD06 (bate com `fn_desconto_bolsa`), RN13, RD03, RD05, RD07, chamada em feriado/fim de semana, nota fora da faixa, assinatura do webhook, perfis de acesso.
+- **Revisão visual automatizada** (Edge controlado por script): 31 telas × computador e celular, com medição de rolagem horizontal, erros de console e alertas; os problemas encontrados (listas e perfis no celular, aviso de turma sem série, abas do portal) foram corrigidos.
+- **131 testes Java** (Model e Controllers), entre eles: RN04 (turma lotada), RN08/RN09 (o cálculo bate com o seed: R$ 375,00 pagos 11 dias depois = R$ 383,86), RN11/RD06 (bate com `fn_desconto_bolsa`), RN13, RD03, RD05, RD07, chamada em feriado/fim de semana, nota fora da faixa, assinatura do webhook, perfis de acesso.
 - **Testes da View** (formatadores) e checagem de tipos (`npm run typecheck`).
 - Cada etapa foi também testada **contra o banco real** com as contas de demonstração; os registros de teste foram desfeitos (exceto 3 pagamentos de teste da Etapa 3, que o banco não deixa apagar — RD05).
 
@@ -112,6 +113,7 @@ Registro completo em [02 §7](02-arquitetura.md#7-decisões-de-arquitetura-regis
 
 | Item | Situação |
 |---|---|
+| Liberar vaga de matrícula não paga; débito da taxa do ano seguinte conta como inadimplência; marcar documento recebido em papel; travar diário e notas antigos | Pendentes de decisão de negócio (ver avaliação de 29/10) |
 | Tela de **Usuários** (dar login a funcionários) | Não feita: hoje os logins da escola são criados no painel do Supabase e ligados por `supabase/demo_usuarios.sql` |
 | Integração real com o Cora | Simulada (D12); a real é uma nova classe de `CoraGateway` |
 | Envio real de e-mail/SMS/WhatsApp | Simulado em log; recuperação de senha depende de SMTP próprio |

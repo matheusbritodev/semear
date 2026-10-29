@@ -48,6 +48,37 @@ export function InadimplenciaPage() {
             <Indicador rotulo="Atualizado hoje" valor={formatarMoeda(consulta.data.valorAtualizado)} />
           </dl>
 
+          <ul className="space-y-3 md:hidden" aria-label="Alunos inadimplentes">
+            {consulta.data.inadimplentes.map((i) => (
+              <li key={i.alunoId} className="rounded-xl border border-slate-200 bg-white p-4">
+                <div className="flex items-start justify-between gap-2">
+                  <Link to={`/escola/alunos/${i.alunoId}`} className="font-medium text-slate-900 hover:text-semear-700">
+                    {i.aluno}
+                  </Link>
+                  <span className="text-lg font-semibold text-slate-900 tabular-nums">{formatarMoeda(i.valorAtualizado)}</span>
+                </div>
+                <p className="text-xs text-slate-500">{i.turma}</p>
+                <p className={`mt-1 text-sm ${i.maiorAtraso > 30 ? 'font-medium text-red-700' : 'text-slate-600'}`}>
+                  {i.cobrancas} {i.cobrancas === 1 ? 'cobrança vencida' : 'cobranças vencidas'} · maior atraso {i.maiorAtraso} dias
+                </p>
+                <ul className="mt-2 space-y-1 text-sm">
+                  {i.itens.map((c) => (
+                    <li key={c.id}>
+                      <button type="button" onClick={() => setCobranca(c.id)} className="text-semear-700 hover:underline">
+                        {ROTULO_TIPO_COBRANCA[c.tipo]} · {formatarCompetencia(c.competencia)}
+                      </button>{' '}
+                      <span className="text-slate-500">· {formatarMoeda(c.valorHoje)}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-3 border-t border-slate-100 pt-2 text-sm">
+                  <p className="text-slate-800">{i.responsavel}</p>
+                  {i.telefone && <Contato inadimplente={i} />}
+                </div>
+              </li>
+            ))}
+          </ul>
+          <div className="hidden md:block">
           <Tabela legenda="Alunos inadimplentes">
             <thead>
               <tr>
@@ -110,6 +141,7 @@ export function InadimplenciaPage() {
               })}
             </tbody>
           </Tabela>
+          </div>
         </>
       )}
       <DetalheCobrancaModal id={cobranca} aoFechar={() => setCobranca(null)} />

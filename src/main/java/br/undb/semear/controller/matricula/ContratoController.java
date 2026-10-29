@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.undb.semear.dto.matricula.ContratoDtos.AssinaturaPresencialRequest;
 import br.undb.semear.dto.matricula.ContratoDtos.ContratoTermoResponse;
+import br.undb.semear.model.entity.matricula.EvidenciaAssinatura;
+import br.undb.semear.security.EscopoAcesso;
 import br.undb.semear.service.matricula.ContratoService;
 import jakarta.validation.Valid;
 
@@ -21,9 +23,11 @@ import jakarta.validation.Valid;
 public class ContratoController {
 
     private final ContratoService contratos;
+    private final EscopoAcesso escopo;
 
-    public ContratoController(ContratoService contratos) {
+    public ContratoController(ContratoService contratos, EscopoAcesso escopo) {
         this.contratos = contratos;
+        this.escopo = escopo;
     }
 
     @GetMapping("/{id}")
@@ -36,6 +40,7 @@ public class ContratoController {
     @PreAuthorize("@permissoes.pode('MATRICULA', 'GRAVAR')")
     public ContratoTermoResponse registrarAssinatura(@PathVariable UUID id,
                                                      @Valid @RequestBody AssinaturaPresencialRequest pedido) {
-        return contratos.assinar(id, pedido.responsavelId(), "presencial");
+        return contratos.assinar(id, pedido.responsavelId(),
+                EvidenciaAssinatura.presencial(escopo.funcionarioOpcional().orElse(null)));
     }
 }

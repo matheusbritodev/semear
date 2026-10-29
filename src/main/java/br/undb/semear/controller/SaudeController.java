@@ -22,7 +22,8 @@ public class SaudeController {
     @GetMapping
     public ResponseEntity<SaudeResponse> verificar() {
         boolean bancoOk = saudeService.bancoDisponivel();
-        SaudeResponse resposta = new SaudeResponse(bancoOk ? "UP" : "DEGRADADO", bancoOk ? "OK" : "INDISPONIVEL");
+        SaudeResponse resposta = new SaudeResponse(bancoOk ? "UP" : "DEGRADADO", bancoOk ? "OK" : "INDISPONIVEL",
+                bancoOk ? saudeService.fusoBanco() : null);
         return ResponseEntity.status(bancoOk ? 200 : 503).body(resposta);
     }
 }

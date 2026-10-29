@@ -46,6 +46,8 @@ export interface Cobranca {
   origemPagamento: OrigemPagamento | null
   temBoleto: boolean
   linkPagamento: string | null
+  /** Funcionário que registrou a baixa presencial. */
+  baixaRegistradaPor: string | null
 }
 
 export interface ComposicaoValor {

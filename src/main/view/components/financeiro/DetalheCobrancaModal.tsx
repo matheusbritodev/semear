@@ -85,7 +85,8 @@ export function DetalheCobrancaModal({ id, aoFechar }: { id: string | null; aoFe
               {c.pagoEm && (
                 <>
                   {' '}
-                  · pago em <strong>{formatarData(c.pagoEm)}</strong> ({c.origemPagamento && ROTULO_ORIGEM[c.origemPagamento]})
+                  · pago em <strong>{formatarData(c.pagoEm)}</strong> ({c.origemPagamento && ROTULO_ORIGEM[c.origemPagamento]}
+                  {c.baixaRegistradaPor && `, recebido por ${c.baixaRegistradaPor}`})
                 </>
               )}
               {!c.temBoleto && aberta && <> · boleto ainda não emitido</>}

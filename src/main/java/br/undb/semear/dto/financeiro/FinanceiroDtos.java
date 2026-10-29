@@ -36,7 +36,8 @@ public final class FinanceiroDtos {
                                    String telefone, BigDecimal valorBruto, BigDecimal descontoBolsa,
                                    BigDecimal valorFinal, LocalDate vencimento, StatusCobranca status, long diasDeAtraso,
                                    BigDecimal valorHoje, OffsetDateTime pagoEm, BigDecimal valorPago,
-                                   OrigemPagamento origemPagamento, boolean temBoleto, String linkPagamento) {
+                                   OrigemPagamento origemPagamento, boolean temBoleto, String linkPagamento,
+                                   String baixaRegistradaPor) {
     }
 
     /** Composição do valor numa data: total = valorFinal − descontoPontualidade + multa + juros. */

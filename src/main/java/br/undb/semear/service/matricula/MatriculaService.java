@@ -18,6 +18,7 @@ import br.undb.semear.model.exception.RecursoNaoEncontradoException;
 import br.undb.semear.repository.matricula.FluxoMatriculaRepository;
 import br.undb.semear.repository.matricula.MatriculaRepository;
 import br.undb.semear.service.academico.AnoLetivoService;
+import br.undb.semear.service.financeiro.CobrancaService;
 import br.undb.semear.service.pessoa.AlunoService;
 
 @Service
@@ -27,13 +28,15 @@ public class MatriculaService {
     private final FluxoMatriculaRepository fluxo;
     private final AnoLetivoService anosLetivos;
     private final DocumentoService documentos;
+    private final CobrancaService cobrancas;
 
     public MatriculaService(MatriculaRepository matriculas, FluxoMatriculaRepository fluxo, AnoLetivoService anosLetivos,
-                            DocumentoService documentos) {
+                            DocumentoService documentos, CobrancaService cobrancas) {
         this.matriculas = matriculas;
         this.fluxo = fluxo;
         this.anosLetivos = anosLetivos;
         this.documentos = documentos;
+        this.cobrancas = cobrancas;
     }
 
     public PaginaResponse<MatriculaResumoResponse> pesquisar(String busca, Integer ano, StatusMatricula status,
@@ -68,7 +71,10 @@ public class MatriculaService {
         return detalhar(id);
     }
 
-    /** Baixa presencial da cobrança de matrícula; o banco ativa a matrícula ao pagar (RD02). */
+    /**
+     * Baixa presencial da cobrança de matrícula, pelo mesmo caminho das outras cobranças (valor do dia, quem recebeu).
+     * O banco ativa a matrícula ao pagar (RD02).
+     */
     @Transactional
     public MatriculaDetalheResponse registrarPagamentoMatricula(UUID id, OrigemPagamento origem) {
         CobrancaResumoResponse cobranca = matriculas.buscarCobrancaMatricula(id)
@@ -76,7 +82,7 @@ public class MatriculaService {
         if (!cobranca.status().emAberto()) {
             throw new ConflitoException("COBRANCA_NAO_ABERTA", "A cobrança de matrícula não está em aberto");
         }
-        fluxo.registrarPagamento(cobranca.id(), origem);
+        cobrancas.registrarPagamento(cobranca.id(), origem);
         return detalhar(id);
     }
 }

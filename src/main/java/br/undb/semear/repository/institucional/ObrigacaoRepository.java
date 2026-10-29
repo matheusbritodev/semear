@@ -9,7 +9,8 @@ import br.undb.semear.model.entity.institucional.ObrigacaoInstitucional;
 
 public interface ObrigacaoRepository {
 
-    record ObrigacaoComContexto(ObrigacaoInstitucional obrigacao, String responsavel, List<ComprovanteObrigacao> comprovantes) {
+    record ObrigacaoComContexto(ObrigacaoInstitucional obrigacao, String responsavel, List<ComprovanteObrigacao> comprovantes,
+                                String cumpridaPor) {
     }
 
     record Funcionario(UUID id, String nome) {
@@ -22,8 +23,8 @@ public interface ObrigacaoRepository {
     /** Insere ou atualiza; o status gravado acompanha (CUMPRIDA, ATRASADA ou PENDENTE). Devolve o id. */
     UUID salvar(ObrigacaoInstitucional obrigacao);
 
-    /** fn_cumprir_obrigacao: registra hoje e programa o próximo vencimento. */
-    void cumprir(UUID id);
+    /** fn_cumprir_obrigacao: registra hoje e programa o próximo vencimento; guarda quem marcou. */
+    void cumprir(UUID id, UUID cumpridaPor);
 
     void remover(UUID id);
 

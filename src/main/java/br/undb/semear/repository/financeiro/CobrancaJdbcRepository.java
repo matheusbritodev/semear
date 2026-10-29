@@ -33,7 +33,7 @@ public class CobrancaJdbcRepository implements CobrancaRepository {
 
     private static final String SELECT = """
             SELECT c.*, a.id AS aluno_id, a.numero_cadastro, a.nome AS aluno, al.ano,
-                   s.nome || ' ' || t.nome AS turma, r.nome AS responsavel, r.telefone
+                   s.nome || ' ' || t.nome AS turma, r.nome AS responsavel, r.telefone, fb.nome AS baixa_por
               FROM cobranca c
               JOIN matricula m   ON m.id = c.matricula_id
               JOIN ano_letivo al ON al.id = m.ano_letivo_id
@@ -41,6 +41,7 @@ public class CobrancaJdbcRepository implements CobrancaRepository {
               JOIN turma t       ON t.id = m.turma_id
               JOIN serie s       ON s.id = t.serie_id
               JOIN responsavel r ON r.id = c.responsavel_id
+              LEFT JOIN funcionario fb ON fb.id = c.baixa_registrada_por
             """;
 
     private final JdbcClient jdbc;
@@ -126,7 +127,8 @@ public class CobrancaJdbcRepository implements CobrancaRepository {
     }
 
     @Override
-    public void registrarPagamento(UUID cobrancaId, OrigemPagamento origem, Dinheiro valorPago, OffsetDateTime pagoEm) {
+    public void registrarPagamento(UUID cobrancaId, OrigemPagamento origem, Dinheiro valorPago, OffsetDateTime pagoEm,
+                                   UUID registradoPor) {
         executar(() -> jdbc.sql("""
                         SELECT fn_registrar_pagamento(:id, CAST(:origem AS origem_pagamento), :valor, :pagoEm)
                         """)
@@ -136,6 +138,11 @@ public class CobrancaJdbcRepository implements CobrancaRepository {
         if (origem == OrigemPagamento.SITE) {
             executar(() -> jdbc.sql("UPDATE cobranca SET cora_sincronizado_em = now() WHERE id = :id")
                     .param("id", cobrancaId).update());
+        }
+        if (registradoPor != null) {
+            // Permitido em cobrança paga: o trigger só bloqueia mudança de valor, status ou matrícula (RD05).
+            executar(() -> jdbc.sql("UPDATE cobranca SET baixa_registrada_por = :por WHERE id = :id")
+                    .param("id", cobrancaId).param("por", registradoPor).update());
         }
     }
 
@@ -182,7 +189,7 @@ public class CobrancaJdbcRepository implements CobrancaRepository {
                 pagamento, coraId == null ? null : new ReferenciaCora(coraId, rs.getString("cora_url")));
         return new CobrancaComContexto(dados, Colunas.uuid(rs, "aluno_id"), rs.getLong("numero_cadastro"),
                 rs.getString("aluno"), rs.getInt("ano"), rs.getString("turma"), rs.getString("responsavel"),
-                Telefone.formatar(rs.getString("telefone")));
+                Telefone.formatar(rs.getString("telefone")), rs.getString("baixa_por"));
     }
 
     private static Dinheiro dinheiro(ResultSet rs, String coluna) throws SQLException {

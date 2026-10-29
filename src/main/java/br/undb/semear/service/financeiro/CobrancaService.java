@@ -47,6 +47,7 @@ import br.undb.semear.repository.financeiro.CobrancaRepository;
 import br.undb.semear.repository.financeiro.CobrancaRepository.CobrancaComContexto;
 import br.undb.semear.repository.financeiro.CobrancaRepository.Filtro;
 import br.undb.semear.repository.financeiro.CobrancaRepository.ResumoMensal;
+import br.undb.semear.security.EscopoAcesso;
 import br.undb.semear.service.academico.AnoLetivoService;
 
 /**
@@ -63,12 +64,15 @@ public class CobrancaService {
     private final AnoLetivoService anosLetivos;
     private final CoraGateway cora;
     private final Clock relogio;
+    private final EscopoAcesso escopo;
 
-    public CobrancaService(CobrancaRepository cobrancas, AnoLetivoService anosLetivos, CoraGateway cora, Clock relogio) {
+    public CobrancaService(CobrancaRepository cobrancas, AnoLetivoService anosLetivos, CoraGateway cora, Clock relogio,
+                           EscopoAcesso escopo) {
         this.cobrancas = cobrancas;
         this.anosLetivos = anosLetivos;
         this.cora = cora;
         this.relogio = relogio;
+        this.escopo = escopo;
     }
 
     /* ---- Consulta ---- */
@@ -142,7 +146,9 @@ public class CobrancaService {
         OffsetDateTime agora = OffsetDateTime.now(relogio);
         Pagamento pagamento = new Pagamento(agora, cobranca.valorAPagar(anosLetivos.hoje()), origem);
         cobranca.pagar(pagamento);
-        cobrancas.registrarPagamento(id, origem, pagamento.valorPago(), agora);
+        // Presencial: guarda quem recebeu. Site (Cora): não há funcionário envolvido.
+        UUID quem = origem == OrigemPagamento.PRESENCIAL ? escopo.funcionarioOpcional().orElse(null) : null;
+        cobrancas.registrarPagamento(id, origem, pagamento.valorPago(), agora, quem);
         LOG.info("Cobrança {} paga ({}, {})", id, origem, cobranca.getTipo());
     }
 
@@ -248,7 +254,8 @@ public class CobrancaService {
                     linha.responsavel(), linha.telefone(), c.getValorBruto().getValor(), c.getDescontoBolsa().getValor(),
                     c.getValorFinal().getValor(), c.getVencimento(), c.statusEm(hoje), c.diasDeAtraso(hoje),
                     c.valorAPagar(hoje).getValor(), p == null ? null : p.pagoEm(),
-                    p == null ? null : p.valorPago().getValor(), p == null ? null : p.origem(), c.getCora() != null, link);
+                    p == null ? null : p.valorPago().getValor(), p == null ? null : p.origem(), c.getCora() != null, link,
+                    linha.baixaRegistradaPor());
         };
     }
 

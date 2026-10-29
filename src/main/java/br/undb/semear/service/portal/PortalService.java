@@ -11,6 +11,7 @@ import br.undb.semear.dto.matricula.ContratoDtos.ContratoResumoResponse;
 import br.undb.semear.dto.matricula.ContratoDtos.ContratoTermoResponse;
 import br.undb.semear.dto.pedagogico.BoletimDtos.BoletimResponse;
 import br.undb.semear.service.academico.MaterialService;
+import br.undb.semear.model.entity.matricula.EvidenciaAssinatura;
 import br.undb.semear.service.matricula.ContratoService;
 import br.undb.semear.service.pedagogico.BoletimService;
 import br.undb.semear.model.exception.RecursoNaoEncontradoException;
@@ -170,9 +171,9 @@ public class PortalService {
     }
 
     /** Aceite eletrônico: quem assina é sempre o responsável do login (RD03). */
-    public ContratoTermoResponse assinarContrato(UUID contratoId) {
+    public ContratoTermoResponse assinarContrato(UUID contratoId, String ip, String navegador) {
         exigirFilho(contratos.alunoDoContrato(contratoId));
-        return contratos.assinar(contratoId, responsavelLogado().getId(), "portal");
+        return contratos.assinar(contratoId, responsavelLogado().getId(), EvidenciaAssinatura.portal(ip, navegador));
     }
 
     public ListaMaterialResponse materiaisDoFilho(UUID alunoId) {

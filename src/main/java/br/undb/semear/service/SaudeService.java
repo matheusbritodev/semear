@@ -17,4 +17,8 @@ public class SaudeService {
     public boolean bancoDisponivel() {
         return banco.estaDisponivel();
     }
+
+    public String fusoBanco() {
+        return banco.fuso();
+    }
 }

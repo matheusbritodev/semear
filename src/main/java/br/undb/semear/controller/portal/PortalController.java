@@ -154,8 +154,10 @@ public class PortalController {
 
     @PostMapping("/contratos/{id}/assinar")
     @PreAuthorize("@permissoes.pode('PORTAL', 'GRAVAR')")
-    public ContratoTermoResponse assinar(@PathVariable UUID id, @Valid @RequestBody AceiteRequest pedido) {
-        return portal.assinarContrato(id);
+    public ContratoTermoResponse assinar(@PathVariable UUID id, @Valid @RequestBody AceiteRequest pedido,
+                                         jakarta.servlet.http.HttpServletRequest requisicao) {
+        // Evidência do aceite eletrônico: endereço de rede e navegador de quem assinou.
+        return portal.assinarContrato(id, requisicao.getRemoteAddr(), requisicao.getHeader("User-Agent"));
     }
 
     @GetMapping("/alunos/{alunoId}/materiais")

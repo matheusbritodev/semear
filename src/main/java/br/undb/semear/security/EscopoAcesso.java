@@ -40,6 +40,11 @@ public class EscopoAcesso {
                         "Seu login não está ligado a um cadastro de funcionário"));
     }
 
+    /** Cadastro de funcionário do login, se houver (o gestor pode não ter): usado para registrar quem fez a ação. */
+    public Optional<UUID> funcionarioOpcional() {
+        return usuarioLogado.usuario().flatMap(u -> funcionarios.buscarIdPorUsuario(u.getId()));
+    }
+
     public boolean ehPerfil(PerfilUsuario perfil) {
         return usuarioLogado.usuario().map(u -> u.getPerfil() == perfil).orElse(false);
     }

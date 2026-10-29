@@ -24,8 +24,9 @@ import br.undb.semear.repository.base.TradutorErroBanco;
 public class ObrigacaoJdbcRepository implements ObrigacaoRepository {
 
     private static final String SELECT = """
-            SELECT o.*, f.nome AS responsavel FROM obrigacao_institucional o
+            SELECT o.*, f.nome AS responsavel, fc.nome AS cumprida_por FROM obrigacao_institucional o
               LEFT JOIN funcionario f ON f.id = o.responsavel_id
+              LEFT JOIN funcionario fc ON fc.id = o.ultimo_cumprimento_por
             """;
 
     private final JdbcClient jdbc;
@@ -44,7 +45,7 @@ public class ObrigacaoJdbcRepository implements ObrigacaoRepository {
                 .stream().collect(Collectors.groupingBy(ComprovanteObrigacao::getObrigacaoId));
         return executar(() -> jdbc.sql(SELECT + " ORDER BY o.proximo_vencimento")
                 .query((rs, n) -> new ObrigacaoComContexto(mapear(rs), rs.getString("responsavel"),
-                        comprovantes.getOrDefault(Colunas.uuid(rs, "id"), List.of())))
+                        comprovantes.getOrDefault(Colunas.uuid(rs, "id"), List.of()), rs.getString("cumprida_por")))
                 .list());
     }
 
@@ -54,7 +55,8 @@ public class ObrigacaoJdbcRepository implements ObrigacaoRepository {
                         "SELECT * FROM documento_obrigacao WHERE obrigacao_id = :id ORDER BY enviado_em DESC")
                 .param("id", id).query((rs, n) -> mapearComprovante(rs)).list());
         return executar(() -> jdbc.sql(SELECT + " WHERE o.id = :id").param("id", id)
-                .query((rs, n) -> new ObrigacaoComContexto(mapear(rs), rs.getString("responsavel"), comprovantes))
+                .query((rs, n) -> new ObrigacaoComContexto(mapear(rs), rs.getString("responsavel"), comprovantes,
+                        rs.getString("cumprida_por")))
                 .optional());
     }
 
@@ -80,8 +82,10 @@ public class ObrigacaoJdbcRepository implements ObrigacaoRepository {
     }
 
     @Override
-    public void cumprir(UUID id) {
+    public void cumprir(UUID id, UUID cumpridaPor) {
         executar(() -> jdbc.sql("SELECT fn_cumprir_obrigacao(:id)").param("id", id).query().singleRow());
+        executar(() -> jdbc.sql("UPDATE obrigacao_institucional SET ultimo_cumprimento_por = :por WHERE id = :id")
+                .param("id", id).param("por", cumpridaPor).update());
     }
 
     @Override

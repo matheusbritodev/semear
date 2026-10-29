@@ -21,4 +21,13 @@ public class BancoRepository {
             return false;
         }
     }
+
+    /** Fuso da sessão do banco (deve ser America/Fortaleza: ver connection-init-sql no application.yml). */
+    public String fuso() {
+        try {
+            return jdbc.sql("SELECT current_setting('TimeZone')").query(String.class).single();
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
 }

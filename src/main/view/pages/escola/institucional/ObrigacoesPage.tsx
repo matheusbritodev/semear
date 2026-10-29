@@ -111,7 +111,10 @@ function CartaoObrigacao({ obrigacao: o, podeEditar, aoEditar }: { obrigacao: Ob
         <dt className="text-slate-500">Responsável</dt>
         <dd className="text-slate-800">{o.responsavel ?? '—'}</dd>
         <dt className="text-slate-500">Último cumprimento</dt>
-        <dd className="text-slate-800">{o.ultimoCumprimento ? formatarData(o.ultimoCumprimento) : '—'}</dd>
+        <dd className="text-slate-800">
+          {o.ultimoCumprimento ? formatarData(o.ultimoCumprimento) : '—'}
+          {o.ultimoCumprimentoPor && <span className="text-slate-500"> · {o.ultimoCumprimentoPor}</span>}
+        </dd>
       </dl>
 
       {o.orgao === 'CENSO_INEP' && pendencias.data && pendencias.data.alunosComPendencia > 0 && (

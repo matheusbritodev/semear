@@ -18,7 +18,7 @@ public interface CobrancaRepository {
 
     /** Linha da cobrança com o contexto que as telas mostram (aluno, turma, responsável). */
     record CobrancaComContexto(DadosCobranca dados, UUID alunoId, long numeroCadastro, String aluno, int ano,
-                               String turma, String responsavel, String telefone) {
+                               String turma, String responsavel, String telefone, String baixaRegistradaPor) {
     }
 
     /**
@@ -51,8 +51,9 @@ public interface CobrancaRepository {
 
     Optional<UUID> buscarIdPorCora(String coraId);
 
-    /** fn_registrar_pagamento com o valor calculado pelo Model (RN08/RN09). */
-    void registrarPagamento(UUID cobrancaId, OrigemPagamento origem, Dinheiro valorPago, OffsetDateTime pagoEm);
+    /** fn_registrar_pagamento com o valor calculado pelo Model (RN08/RN09) e o funcionário que recebeu (presencial). */
+    void registrarPagamento(UUID cobrancaId, OrigemPagamento origem, Dinheiro valorPago, OffsetDateTime pagoEm,
+                            UUID registradoPor);
 
     /** fn_gerar_cobrancas_periodo: devolve quantas cobranças novas foram criadas (RN01 evita duplicar). */
     int gerarPeriodo(int ano, int mesInicio, int mesFim);

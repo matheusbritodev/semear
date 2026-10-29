@@ -48,10 +48,27 @@ export function TermoContrato({ termo, rodape }: { termo: ContratoTermo; rodape?
       </p>
 
       {termo.status === 'ASSINADO' && (
-        <p className="mt-6 rounded-lg bg-semear-50 px-4 py-3 text-sm text-semear-800">
-          Assinado por <strong>{termo.assinadoPor}</strong>
-          {termo.assinadoEm && <> em {formatarData(termo.assinadoEm)}</>}.
-        </p>
+        <div className="mt-6 space-y-1 rounded-lg bg-semear-50 px-4 py-3 text-sm text-semear-800">
+          <p>
+            Assinado por <strong>{termo.assinadoPor}</strong>
+            {termo.assinadoEm && <> em {formatarData(termo.assinadoEm)}</>}
+            {termo.assinaturaCanal === 'PORTAL' && ' pelo Portal do Responsável (aceite eletrônico)'}
+            {termo.assinaturaCanal === 'PRESENCIAL' && (
+              <> na secretaria{termo.registradaPor ? `, registrado por ${termo.registradaPor}` : ''}</>
+            )}
+            .
+          </p>
+          {termo.textoDaAssinatura && termo.termoHash ? (
+            <p className="text-xs text-semear-700">
+              Texto exatamente como foi assinado. Código de verificação:{' '}
+              <span className="font-mono break-all">{termo.termoHash.slice(0, 16)}…</span>
+            </p>
+          ) : (
+            <p className="text-xs text-semear-700">
+              Assinado antes do registro do texto: as cláusulas abaixo mostram os valores atuais da tabela.
+            </p>
+          )}
+        </div>
       )}
       {rodape && <div className="mt-6 print:hidden">{rodape}</div>}
     </article>

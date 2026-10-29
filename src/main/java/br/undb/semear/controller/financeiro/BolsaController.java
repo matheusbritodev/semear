@@ -71,21 +71,12 @@ public class BolsaController {
     @PostMapping("/matriculas/{id}/bolsas")
     @PreAuthorize("@permissoes.pode('BOLSAS', 'GRAVAR')")
     public List<ConcessaoResponse> conceder(@PathVariable UUID id, @Valid @RequestBody ConcederBolsaRequest pedido) {
-        return bolsas.conceder(id, pedido.bolsaId(), pedido.vigenciaInicio(), funcionarioOuNulo());
+        return bolsas.conceder(id, pedido.bolsaId(), pedido.vigenciaInicio(), escopo.funcionarioOpcional().orElse(null));
     }
 
     @DeleteMapping("/matriculas/{id}/bolsas/{concessaoId}")
     @PreAuthorize("@permissoes.pode('BOLSAS', 'GRAVAR')")
     public List<ConcessaoResponse> revogar(@PathVariable UUID id, @PathVariable UUID concessaoId) {
         return bolsas.revogar(id, concessaoId);
-    }
-
-    /** Quem concedeu (funcionário do login); a conta do gestor pode não ter cadastro de funcionário. */
-    private UUID funcionarioOuNulo() {
-        try {
-            return escopo.funcionarioLogado();
-        } catch (RuntimeException e) {
-            return null;
-        }
     }
 }

@@ -25,6 +25,7 @@ import br.undb.semear.model.exception.RegraNegocioException;
 import br.undb.semear.model.valueobject.ArquivoEnviado;
 import br.undb.semear.repository.institucional.ObrigacaoRepository;
 import br.undb.semear.repository.institucional.ObrigacaoRepository.ObrigacaoComContexto;
+import br.undb.semear.security.EscopoAcesso;
 import br.undb.semear.service.academico.AnoLetivoService;
 import br.undb.semear.service.matricula.DocumentoService;
 
@@ -41,13 +42,15 @@ public class ObrigacaoService {
     private final ArmazenamentoArquivos armazenamento;
     private final AnoLetivoService anosLetivos;
     private final Clock relogio;
+    private final EscopoAcesso escopo;
 
     public ObrigacaoService(ObrigacaoRepository obrigacoes, ArmazenamentoArquivos armazenamento,
-                            AnoLetivoService anosLetivos, Clock relogio) {
+                            AnoLetivoService anosLetivos, Clock relogio, EscopoAcesso escopo) {
         this.obrigacoes = obrigacoes;
         this.armazenamento = armazenamento;
         this.anosLetivos = anosLetivos;
         this.relogio = relogio;
+        this.escopo = escopo;
     }
 
     public List<ObrigacaoResponse> listar() {
@@ -86,7 +89,7 @@ public class ObrigacaoService {
     public ObrigacaoResponse cumprir(UUID id) {
         ObrigacaoComContexto c = buscar(id);
         c.obrigacao().cumprir(anosLetivos.hoje(), c.comprovantes().stream().map(ComprovanteObrigacao::getEnviadoEm).toList());
-        obrigacoes.cumprir(id);
+        obrigacoes.cumprir(id, escopo.funcionarioOpcional().orElse(null));
         LOG.info("Obrigação {} ({}) cumprida", id, c.obrigacao().getOrgao());
         return detalhar(id);
     }
@@ -161,6 +164,7 @@ public class ObrigacaoService {
         boolean podeCumprir = !o.isEncerrada() && comprovantes.stream().anyMatch(ComprovanteResponse::doCicloAtual);
         return new ObrigacaoResponse(o.getId(), o.getOrgao(), o.getOrgao().getRotulo(), o.getDescricao(),
                 o.getPeriodicidadeMeses(), o.getProximoVencimento(), o.diasRestantes(hoje), o.getDiasAlerta(),
-                o.situacaoEm(hoje), o.getUltimoCumprimento(), o.getResponsavelId(), c.responsavel(), comprovantes, podeCumprir);
+                o.situacaoEm(hoje), o.getUltimoCumprimento(), c.cumpridaPor(), o.getResponsavelId(), c.responsavel(),
+                comprovantes, podeCumprir);
     }
 }

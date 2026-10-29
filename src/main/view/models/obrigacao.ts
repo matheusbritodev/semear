@@ -37,6 +37,8 @@ export interface Obrigacao {
   diasAlerta: number
   situacao: SituacaoObrigacao
   ultimoCumprimento: string | null
+  /** Funcionário que marcou o último cumprimento. */
+  ultimoCumprimentoPor: string | null
   responsavelId: string | null
   responsavel: string | null
   comprovantes: Comprovante[]

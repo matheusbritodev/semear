@@ -17,6 +17,9 @@ spring:
     password: ${SUPABASE_DB_PASSWORD}
     hikari:
       maximum-pool-size: ${DB_POOL_MAX:5}
+      # O banco do Supabase está em UTC: sem isto, current_date (vencidas, inadimplência, obrigações)
+      # vira o dia seguinte depois das 21h de São Luís. O pooler não repassa o fuso enviado pelo driver.
+      connection-init-sql: SET TIME ZONE 'America/Fortaleza'
 # A validação do JWT (JWKS do Supabase, emissor e audiência) é configurada em security/SecurityConfig.
 
 server:

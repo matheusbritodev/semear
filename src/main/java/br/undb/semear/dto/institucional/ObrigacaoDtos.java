@@ -26,8 +26,8 @@ public final class ObrigacaoDtos {
     public record ObrigacaoResponse(UUID id, OrgaoExterno orgao, String orgaoRotulo, String descricao,
                                     Integer periodicidadeMeses, LocalDate proximoVencimento, long diasRestantes,
                                     int diasAlerta, SituacaoObrigacao situacao, LocalDate ultimoCumprimento,
-                                    UUID responsavelId, String responsavel, List<ComprovanteResponse> comprovantes,
-                                    boolean podeCumprir) {
+                                    String ultimoCumprimentoPor, UUID responsavelId, String responsavel,
+                                    List<ComprovanteResponse> comprovantes, boolean podeCumprir) {
     }
 
     public record ObrigacaoRequest(@NotNull OrgaoExterno orgao, @NotBlank @Size(max = 255) String descricao,

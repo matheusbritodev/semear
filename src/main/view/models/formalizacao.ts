@@ -31,6 +31,13 @@ export interface ContratoTermo {
   podeAssinar: boolean
   clausulas: Clausula[]
   responsaveis: Assinante[]
+  /** As cláusulas são as congeladas na assinatura (não mudam com reajuste). */
+  textoDaAssinatura: boolean
+  /** Código de verificação (SHA-256) do texto assinado. */
+  termoHash: string | null
+  assinaturaCanal: 'PORTAL' | 'PRESENCIAL' | null
+  /** Funcionário que registrou a assinatura presencial. */
+  registradaPor: string | null
 }
 
 export interface ContratoResumo {

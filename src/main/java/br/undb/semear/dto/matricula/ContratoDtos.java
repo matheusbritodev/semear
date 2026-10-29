@@ -21,11 +21,18 @@ public final class ContratoDtos {
     public record AssinanteResponse(UUID id, String nome, String parentesco, boolean financeiro) {
     }
 
-    /** Termo completo. {@code podeAssinar}: pendente e matrícula vigente (o servidor confere de novo). */
+    /**
+     * Termo completo. {@code podeAssinar}: pendente e matrícula vigente (o servidor confere de novo).
+     * {@code textoDaAssinatura}: as cláusulas são as congeladas na assinatura (com {@code termoHash});
+     * falso = texto gerado agora com os valores atuais (pendente, ou assinado antes do congelamento existir).
+     * {@code assinaturaCanal}: PORTAL ou PRESENCIAL; {@code registradaPor}: funcionário, no presencial.
+     */
     public record ContratoTermoResponse(UUID id, TipoContrato tipo, String titulo, StatusContrato status, UUID matriculaId,
                                         UUID alunoId, String aluno, int ano, String serie, String turma,
                                         String assinadoPor, OffsetDateTime assinadoEm, boolean podeAssinar,
-                                        List<ClausulaResponse> clausulas, List<AssinanteResponse> responsaveis) {
+                                        List<ClausulaResponse> clausulas, List<AssinanteResponse> responsaveis,
+                                        boolean textoDaAssinatura, String termoHash, String assinaturaCanal,
+                                        String registradaPor) {
     }
 
     public record ContratoResumoResponse(UUID id, TipoContrato tipo, String titulo, StatusContrato status, int ano,

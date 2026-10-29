@@ -6,7 +6,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
-import br.undb.semear.model.enums.OrigemPagamento;
 import br.undb.semear.repository.base.TradutorErroBanco;
 
 /**
@@ -52,17 +51,6 @@ public class FluxoMatriculaRepository {
                     .param("aluno", alunoId).param("turma", turmaId)
                     .param("uniforme", fardaUniforme).param("edFisica", fardaEdFisica)
                     .query(UUID.class).single();
-        } catch (DataAccessException e) {
-            throw tradutor.traduzir(e);
-        }
-    }
-
-    /** fn_registrar_pagamento: pagar a cobrança de matrícula ativa a matrícula (RD02). */
-    public void registrarPagamento(UUID cobrancaId, OrigemPagamento origem) {
-        try {
-            jdbc.sql("SELECT fn_registrar_pagamento(:cobranca, CAST(:origem AS origem_pagamento))")
-                    .param("cobranca", cobrancaId).param("origem", origem.name())
-                    .query().singleRow();
         } catch (DataAccessException e) {
             throw tradutor.traduzir(e);
         }

@@ -27,6 +27,15 @@ public class AnoLetivo extends Entidade {
         this.dataFim = dataFim;
     }
 
+    /** Ano letivo novo ou ajustado: as datas precisam cair no próprio ano civil. */
+    public static AnoLetivo definir(UUID id, int ano, LocalDate inicio, LocalDate fim) {
+        AnoLetivo a = new AnoLetivo(id, ano, inicio, fim);
+        if (inicio.getYear() != ano || fim.getYear() != ano) {
+            throw new DadoInvalidoException("dataInicio", "As datas do ano letivo " + ano + " precisam estar dentro de " + ano);
+        }
+        return a;
+    }
+
     public boolean contem(LocalDate data) {
         return !data.isBefore(dataInicio) && !data.isAfter(dataFim);
     }

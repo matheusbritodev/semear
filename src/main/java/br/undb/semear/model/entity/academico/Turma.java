@@ -32,6 +32,23 @@ public class Turma extends Entidade {
         this.ocupadas = ocupadas;
     }
 
+    /** Turma nova (ainda sem alunos). Nome curto, como "A" ou "B", em maiúsculas. */
+    public static Turma nova(Serie serie, int anoLetivo, String nome, int capacidadeMax) {
+        String texto = nome == null ? "" : nome.trim().toUpperCase(java.util.Locale.ROOT);
+        if (texto.isEmpty() || texto.length() > 20) {
+            throw new DadoInvalidoException("nome", "Informe o nome da turma (até 20 caracteres, ex.: A)");
+        }
+        return new Turma(null, serie, anoLetivo, texto, capacidadeMax, 0);
+    }
+
+    /** Só turma sem alunos (aguardando pagamento ou ativos) pode ser apagada. */
+    public void exigirRemovivel() {
+        if (ocupadas > 0) {
+            throw new br.undb.semear.model.exception.RegraNegocioException("TURMA_COM_ALUNOS",
+                    "A turma tem alunos matriculados e não pode ser apagada");
+        }
+    }
+
     private static int validarCapacidade(int capacidade) {
         if (capacidade < 1 || capacidade > CAPACIDADE_MAXIMA) {
             throw new DadoInvalidoException("capacidade", "A capacidade deve ficar entre 1 e " + CAPACIDADE_MAXIMA + " alunos");

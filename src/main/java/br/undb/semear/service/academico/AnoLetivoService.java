@@ -44,6 +44,22 @@ public class AnoLetivoService {
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Ano letivo"));
     }
 
+    /** Abre um ano letivo novo (ex.: preparar 2028). */
+    @org.springframework.transaction.annotation.Transactional
+    public AnoLetivo criar(int ano, LocalDate inicio, LocalDate fim) {
+        if (anos.buscarPorAno(ano).isPresent()) {
+            throw new br.undb.semear.model.exception.ConflitoException("ANO_LETIVO_EXISTENTE", "O ano letivo " + ano + " já existe");
+        }
+        return anos.salvar(AnoLetivo.definir(null, ano, inicio, fim));
+    }
+
+    /** Ajusta o início e o fim (o calendário e as cobranças já gerados não mudam). */
+    @org.springframework.transaction.annotation.Transactional
+    public AnoLetivo alterarDatas(int ano, LocalDate inicio, LocalDate fim) {
+        AnoLetivo atual = anos.buscarPorAno(ano).orElseThrow(() -> new RecursoNaoEncontradoException("Ano letivo " + ano));
+        return anos.salvar(AnoLetivo.definir(atual.getId(), ano, inicio, fim));
+    }
+
     /** Virada do ano: depois do último dia letivo, as matrículas ATIVAS passam a ENCERRADAS. */
     @org.springframework.transaction.annotation.Transactional
     public int encerrar(int ano) {

@@ -65,11 +65,20 @@ public class TurmaJdbcRepository extends JdbcRepository<Turma> implements TurmaR
                 linha.getInt("capacidade_max"), linha.getInt("ocupadas"));
     }
 
-    /** Nesta etapa só a capacidade e o nome mudam; turmas novas virão com a tela de configuração do ano. */
+    /** Turma nova entra no ano letivo da própria turma; a existente só muda nome e capacidade. */
     @Override
     public Turma salvar(Turma turma) {
         if (!turma.estaPersistida()) {
-            throw new RegraNegocioException("OPERACAO_NAO_DISPONIVEL", "Cadastro de turmas ainda não disponível");
+            UUID id = executar(() -> jdbc.sql("""
+                            INSERT INTO turma (serie_id, ano_letivo_id, nome, capacidade_max)
+                            SELECT :serie, al.id, :nome, :capacidade FROM ano_letivo al WHERE al.ano = :ano
+                            RETURNING id
+                            """)
+                    .param("serie", turma.getSerie().getId()).param("nome", turma.getNome())
+                    .param("capacidade", turma.getCapacidadeMax()).param("ano", turma.getAnoLetivo())
+                    .query(UUID.class).optional())
+                    .orElseThrow(() -> new RegraNegocioException("ANO_LETIVO_INEXISTENTE", "Cadastre o ano letivo " + turma.getAnoLetivo()));
+            return buscarPorId(id).orElseThrow();
         }
         executar(() -> jdbc.sql("UPDATE turma SET nome = :nome, capacidade_max = :capacidade WHERE id = :id")
                 .param("id", turma.getId()).param("nome", turma.getNome())
@@ -114,7 +123,7 @@ public class TurmaJdbcRepository extends JdbcRepository<Turma> implements TurmaR
     @Override
     public List<ProfessorDaTurmaResponse> listarProfessores(UUID turmaId) {
         return executar(() -> jdbc.sql("""
-                        SELECT f.id, f.nome, d.nome AS disciplina
+                        SELECT tp.id AS vinculo_id, f.id, f.nome, tp.disciplina_id, d.nome AS disciplina
                           FROM turma_professor tp
                           JOIN funcionario f ON f.id = tp.funcionario_id
                           LEFT JOIN disciplina d ON d.id = tp.disciplina_id
@@ -123,7 +132,7 @@ public class TurmaJdbcRepository extends JdbcRepository<Turma> implements TurmaR
                         """)
                 .param("turma", turmaId)
                 .query((rs, n) -> new ProfessorDaTurmaResponse(Colunas.uuid(rs, "id"), rs.getString("nome"),
-                        rs.getString("disciplina")))
+                        rs.getString("disciplina"), Colunas.uuid(rs, "vinculo_id"), Colunas.uuid(rs, "disciplina_id")))
                 .list());
     }
 
@@ -134,5 +143,37 @@ public class TurmaJdbcRepository extends JdbcRepository<Turma> implements TurmaR
                         """)
                 .param("turma", turmaId).param("professor", funcionarioId)
                 .query(Boolean.class).single());
+    }
+
+    @Override
+    public br.undb.semear.model.entity.pedagogico.ProfessoresDaTurma atribuicoes(UUID turmaId) {
+        return new br.undb.semear.model.entity.pedagogico.ProfessoresDaTurma(executar(() -> jdbc.sql(
+                        "SELECT funcionario_id, disciplina_id FROM turma_professor WHERE turma_id = :turma")
+                .param("turma", turmaId)
+                .query((rs, n) -> new br.undb.semear.model.entity.pedagogico.ProfessoresDaTurma.Atribuicao(
+                        Colunas.uuid(rs, "funcionario_id"), Colunas.uuid(rs, "disciplina_id")))
+                .list()));
+    }
+
+    @Override
+    public UUID vincularProfessor(UUID turmaId, UUID funcionarioId, UUID disciplinaId) {
+        return executar(() -> jdbc.sql("""
+                        INSERT INTO turma_professor (turma_id, funcionario_id, disciplina_id)
+                        VALUES (:turma, :funcionario, :disciplina) RETURNING id
+                        """)
+                .param("turma", turmaId).param("funcionario", funcionarioId).param("disciplina", disciplinaId)
+                .query(UUID.class).single());
+    }
+
+    @Override
+    public boolean removerVinculoProfessor(UUID turmaId, UUID vinculoId) {
+        return executar(() -> jdbc.sql("DELETE FROM turma_professor WHERE id = :id AND turma_id = :turma")
+                .param("id", vinculoId).param("turma", turmaId).update()) == 1;
+    }
+
+    @Override
+    public List<Disciplina> disciplinas() {
+        return executar(() -> jdbc.sql("SELECT id, nome FROM disciplina ORDER BY nome")
+                .query((rs, n) -> new Disciplina(Colunas.uuid(rs, "id"), rs.getString("nome"))).list());
     }
 }

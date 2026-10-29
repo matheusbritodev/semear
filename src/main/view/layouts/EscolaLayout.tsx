@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { NavLink, Outlet, useLocation } from 'react-router'
+import { Link, NavLink, Outlet, useLocation } from 'react-router'
 import { House, LogOut, Menu, X } from 'lucide-react'
 import { useAuth } from '@/auth/useAuth'
 import { pode } from '@/auth/permissions'
@@ -84,6 +84,9 @@ export function EscolaLayout() {
               <p className="text-sm font-medium text-slate-800">{sessao?.nome ?? sessao?.email}</p>
               {sessao?.perfil && <p className="text-xs text-slate-500">{ROTULO_PERFIL[sessao.perfil]}</p>}
             </div>
+            <Link to="/redefinir-senha" className="hidden text-sm text-slate-500 hover:text-slate-800 sm:inline" title="Trocar a senha">
+              Trocar senha
+            </Link>
             <Button variante="fantasma" onClick={() => void sair()} aria-label="Sair">
               <LogOut className="size-4" aria-hidden /> <span className="hidden sm:inline">Sair</span>
             </Button>

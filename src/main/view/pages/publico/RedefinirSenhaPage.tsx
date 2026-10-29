@@ -14,7 +14,10 @@ const esquema = z
   .refine((d) => d.senha === d.confirmacao, { message: 'As senhas não conferem', path: ['confirmacao'] })
 type Formulario = z.infer<typeof esquema>
 
-/** Destino do link de recuperação: o Supabase abre uma sessão temporária e aqui se define a nova senha. */
+/**
+ * Nova senha: destino do link de recuperação (sessão temporária do Supabase) e também o "Trocar senha"
+ * de quem já está logado — por exemplo, para trocar a senha provisória dada pela escola.
+ */
 export function RedefinirSenhaPage() {
   const { session, carregando, redefinirSenha } = useAuth()
   const navegar = useNavigate()

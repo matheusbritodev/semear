@@ -39,7 +39,10 @@ export interface AlunoDaTurma {
 export interface ProfessorDaTurma {
   funcionarioId: string
   nome: string
+  /** Nula = regente (polivalente). */
   disciplina: string | null
+  vinculoId: string
+  disciplinaId: string | null
 }
 
 export interface TurmaDetalhe {

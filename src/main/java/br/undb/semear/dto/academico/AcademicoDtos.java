@@ -46,7 +46,49 @@ public final class AcademicoDtos {
                                        TipoMatricula tipo, StatusMatricula status) {
     }
 
-    public record ProfessorDaTurmaResponse(UUID funcionarioId, String nome, String disciplina) {
+    /** {@code disciplina} nula = regente (polivalente). {@code vinculoId} serve para remover o vínculo. */
+    public record ProfessorDaTurmaResponse(UUID funcionarioId, String nome, String disciplina, UUID vinculoId,
+                                           UUID disciplinaId) {
+    }
+
+    public record NovaTurmaRequest(@jakarta.validation.constraints.NotNull Integer ano,
+                                   @jakarta.validation.constraints.NotNull UUID serieId,
+                                   @jakarta.validation.constraints.NotBlank @jakarta.validation.constraints.Size(max = 20) String nome,
+                                   @jakarta.validation.constraints.NotNull @jakarta.validation.constraints.Min(1)
+                                   @jakarta.validation.constraints.Max(30) Integer capacidade) {
+    }
+
+    /** {@code disciplinaId} nulo = professor regente (polivalente). */
+    public record VincularProfessorRequest(@jakarta.validation.constraints.NotNull UUID funcionarioId, UUID disciplinaId) {
+    }
+
+    public record OpcaoResponse(UUID id, String nome) {
+    }
+
+    public record OpcoesProfessoresResponse(java.util.List<OpcaoResponse> professores, java.util.List<OpcaoResponse> disciplinas) {
+    }
+
+    public record AnoLetivoRequest(@jakarta.validation.constraints.NotNull Integer ano,
+                                   @jakarta.validation.constraints.NotNull java.time.LocalDate dataInicio,
+                                   @jakarta.validation.constraints.NotNull java.time.LocalDate dataFim) {
+    }
+
+    /** Linha da tabela de preços: valores nulos = série ainda sem preço no ano. */
+    public record PrecoSerieResponse(UUID serieId, String serie, br.undb.semear.model.enums.NivelEnsino nivel, int ordem,
+                                     java.math.BigDecimal valorMatricula, java.math.BigDecimal valorMensal,
+                                     Integer diaVencimento, Integer diasPrazoMatricula) {
+    }
+
+    public record PrecoRequest(@jakarta.validation.constraints.NotNull UUID serieId, @jakarta.validation.constraints.NotNull Integer ano,
+                               @jakarta.validation.constraints.NotNull @jakarta.validation.constraints.PositiveOrZero java.math.BigDecimal valorMatricula,
+                               @jakarta.validation.constraints.NotNull @jakarta.validation.constraints.Positive java.math.BigDecimal valorMensal,
+                               @jakarta.validation.constraints.NotNull Integer diaVencimento,
+                               @jakarta.validation.constraints.NotNull Integer diasPrazoMatricula) {
+    }
+
+    public record CopiarPrecosRequest(@jakarta.validation.constraints.NotNull Integer deAno,
+                                      @jakarta.validation.constraints.NotNull Integer paraAno,
+                                      @jakarta.validation.constraints.NotNull java.math.BigDecimal reajustePercentual) {
     }
 
     public record AlterarCapacidadeRequest(

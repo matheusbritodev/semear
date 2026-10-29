@@ -12,6 +12,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import br.undb.semear.dto.academico.AcademicoDtos.NovaTurmaRequest;
+import br.undb.semear.dto.academico.AcademicoDtos.OpcoesProfessoresResponse;
+import br.undb.semear.dto.academico.AcademicoDtos.ProfessorDaTurmaResponse;
+import br.undb.semear.dto.academico.AcademicoDtos.VincularProfessorRequest;
+import jakarta.validation.Valid;
 import br.undb.semear.dto.academico.AcademicoDtos.AlterarCapacidadeRequest;
 import br.undb.semear.dto.academico.AcademicoDtos.TurmaDetalheResponse;
 import br.undb.semear.dto.academico.AcademicoDtos.TurmaResponse;
@@ -47,5 +57,39 @@ public class TurmaController {
     @PreAuthorize("@permissoes.pode('TURMAS', 'GRAVAR')")
     public TurmaResponse alterarCapacidade(@PathVariable UUID id, @Valid @RequestBody AlterarCapacidadeRequest pedido) {
         return TurmaResponse.de(turmas.alterarCapacidade(id, pedido.capacidade()));
+    }
+
+    /* ---- Cadastro (configuração do ano) ---- */
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("@permissoes.pode('TURMAS', 'GRAVAR')")
+    public TurmaResponse criar(@Valid @RequestBody NovaTurmaRequest pedido) {
+        return TurmaResponse.de(turmas.criar(pedido.ano(), pedido.serieId(), pedido.nome(), pedido.capacidade()));
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("@permissoes.pode('TURMAS', 'GRAVAR')")
+    public void remover(@PathVariable UUID id) {
+        turmas.remover(id);
+    }
+
+    @GetMapping("/opcoes-professores")
+    @PreAuthorize("@permissoes.pode('TURMAS', 'GRAVAR')")
+    public OpcoesProfessoresResponse opcoesProfessores() {
+        return turmas.opcoesProfessores();
+    }
+
+    @PostMapping("/{id}/professores")
+    @PreAuthorize("@permissoes.pode('TURMAS', 'GRAVAR')")
+    public List<ProfessorDaTurmaResponse> vincularProfessor(@PathVariable UUID id, @Valid @RequestBody VincularProfessorRequest pedido) {
+        return turmas.vincularProfessor(id, pedido.funcionarioId(), pedido.disciplinaId());
+    }
+
+    @DeleteMapping("/{id}/professores/{vinculoId}")
+    @PreAuthorize("@permissoes.pode('TURMAS', 'GRAVAR')")
+    public List<ProfessorDaTurmaResponse> removerProfessor(@PathVariable UUID id, @PathVariable UUID vinculoId) {
+        return turmas.removerProfessor(id, vinculoId);
     }
 }

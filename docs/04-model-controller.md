@@ -608,9 +608,12 @@ Convenções: JSON, `camelCase`, datas ISO-8601, dinheiro como string decimal (`
 | Método | Rota | Permissão | Descrição |
 |---|---|---|---|
 | GET | `/api/me` | autenticado | Dados do usuário logado, perfil e permissões (monta o menu) |
-| GET | `/api/usuarios` | USUARIOS:L | Lista usuários |
-| POST | `/api/usuarios` | USUARIOS:G | Convida funcionário (cria no Auth + `usuario` + vínculo) |
-| PATCH | `/api/usuarios/{id}/ativo` | USUARIOS:G | Ativa/desativa |
+| GET | `/api/usuarios` ✅ | USUARIOS:L | Logins com o cadastro ligado (funcionário, responsável) |
+| GET | `/api/usuarios/funcionarios-sem-login` ✅ | USUARIOS:G | Funcionários ativos ainda sem acesso |
+| POST | `/api/usuarios` ✅ | USUARIOS:G | `{ funcionarioId, email, perfil }` → conta no Auth já confirmada + `usuario` + vínculo; devolve a **senha provisória** (uma vez) |
+| PATCH | `/api/usuarios/{id}/perfil` ✅ | USUARIOS:G | Perfil compatível com o cadastro (Professor só para funcionário professor); não a si mesmo; sempre sobra um ADMIN |
+| PATCH | `/api/usuarios/{id}/ativo` ✅ | USUARIOS:G | Desativa/reativa (o desativado recebe 403 `ACESSO_DESATIVADO` ao entrar) |
+| POST | `/api/usuarios/{id}/senha-temporaria` ✅ | USUARIOS:G | Gera nova senha provisória (substitui a recuperação por e-mail, D10) |
 | POST | `/api/publico/contas` ✅ | público (5/h por IP) | Cria a conta do responsável já confirmada (D10); a View entra em seguida |
 | GET | `/api/permissoes` ✅ | CONFIGURACOES:L | Matriz perfil × módulo (perfis de acesso) |
 | PUT | `/api/permissoes/{perfil}/{modulo}` ✅ | CONFIGURACOES:G | Corpo `{ler, gravar}`; gravar implica ler; ADMIN mantém Configurações e Usuários (`PERMISSAO_ESSENCIAL`) |
@@ -650,6 +653,12 @@ Convenções: JSON, `camelCase`, datas ISO-8601, dinheiro como string decimal (`
 | GET | `/api/turmas?ano=` ✅ | TURMAS:L | Turmas com ocupação; professor só vê as suas |
 | GET | `/api/turmas/{id}` ✅ | TURMAS:L | Turma, alunos que ocupam vaga e professores |
 | PATCH | `/api/turmas/{id}/capacidade` ✅ | TURMAS:G | `{ capacidade }` — RN04 (1 a 30, nunca abaixo da ocupação) |
+| POST · DELETE | `/api/turmas[/{id}]` ✅ | TURMAS:G | Criar `{ ano, serieId, nome, capacidade }`; apagar só sem alunos |
+| GET | `/api/turmas/opcoes-professores` ✅ | TURMAS:G | Professores ativos e disciplinas |
+| POST · DELETE | `/api/turmas/{id}/professores[/{vinculoId}]` ✅ | TURMAS:G | Regente (sem disciplina, um por turma) ou especialista (um por disciplina) |
+| POST · PUT | `/api/anos-letivos[/{ano}]` ✅ | CONFIGURACOES:G | Abrir ano / ajustar datas (dentro do próprio ano) |
+| GET · PUT | `/api/tabela-precos[?ano=]` ✅ | CONFIGURACOES:L (ou FINANCEIRO:L) / CONFIGURACOES:G | Preço por série: matrícula, mensal, vencimento (1–28), prazo |
+| POST | `/api/tabela-precos/copiar` ✅ | CONFIGURACOES:G | `{ deAno, paraAno, reajustePercentual }` — só séries sem preço |
 | GET/POST/DELETE | `/api/turmas/{id}/professores` | TURMAS:L/G | Vínculo professor/disciplina |
 | GET/PUT | `/api/tabela-precos` | FINANCEIRO:L / CONFIGURACOES:G | Preços por série/ano |
 | GET/PUT | `/api/listas-materiais/{serieId}/{ano}` | TURMAS:L/G | Lista de materiais |

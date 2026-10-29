@@ -63,6 +63,13 @@ public class TradutorErroBanco {
             return new RegraNegocioException("REGRA_DO_BANCO", mensagem, erro);
         }
         if ("23505".equals(estado)) {
+            // Mensagens específicas para as duplicidades que o usuário consegue provocar pelas telas.
+            if (mensagem.contains("uq_turma")) {
+                return new ConflitoException("TURMA_EXISTENTE", "Já existe uma turma com esse nome nesta série e ano", erro);
+            }
+            if (mensagem.contains("usuario_email")) {
+                return new ConflitoException("EMAIL_JA_CADASTRADO", "Este e-mail já é usado por outro acesso", erro);
+            }
             return new ConflitoException("DUPLICADO", "Já existe um registro com esses dados", erro);
         }
         if ("23514".equals(estado) || "23503".equals(estado) || "23502".equals(estado) || "22P02".equals(estado)) {

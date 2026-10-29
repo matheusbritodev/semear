@@ -141,10 +141,10 @@ Fluxo dentro da View: **page → hook → service → HttpClient → Controller*
 | `/escola/pedagogico/calendario` ✅ | Calendário letivo por mês; gestão adiciona e remove dias | Todos com PEDAGOGICO; altera CONFIGURACOES:G | `/calendario` |
 | `/escola/rh/funcionarios` → **Formação** ✅ | Cursos de formação continuada do funcionário | ADMIN | `/funcionarios/{id}/formacoes` |
 | `/escola/obrigacoes` ✅ | Obrigações com prazo, comprovantes, cumprimento e aviso no painel; Censo mostra as pendências de documentos | ADMIN, SECRETARIA | `/obrigacoes` |
-| `/escola/config/anos-letivos` | Anos letivos e encerramento | ADMIN | `/anos-letivos` |
-| `/escola/config/precos` | Tabela de preços | ADMIN | `/tabela-precos` |
+| `/escola/config/ano-letivo` ✅ | Período do ano, tabela de preços (com cópia e reajuste) e turmas; abrir o próximo ano | ADMIN (turmas: SECRETARIA também) | `/anos-letivos`, `/tabela-precos`, `/turmas` |
 | `/escola/config/materiais` | Listas de materiais | ADMIN, SECRETARIA | `/listas-materiais` |
-| `/escola/config/usuarios` | Usuários e convites | ADMIN | `/usuarios` |
+| `/escola/config/usuarios` ✅ | Logins: dar acesso a funcionário, trocar perfil, desativar, senha provisória | ADMIN | `/usuarios` |
+| `/redefinir-senha` ✅ (link "Trocar senha" no topo) | Trocar a própria senha (ex.: a provisória) | Todos | Supabase Auth |
 | `/escola/config/materiais` ✅ | Listas de materiais por série e ano, com cópia do ano anterior | ADMIN, SECRETARIA | `/materiais` |
 | `/escola/contratos/:id` ✅ | Termo do contrato/ficha, imprimir e registrar assinatura presencial | ADMIN, SECRETARIA | `/contratos/{id}` |
 | `/escola/config/perfis` ✅ | Perfis de acesso: matriz módulo × perfil (Sem acesso / Consultar / Alterar) e "Restaurar padrão" | CONFIGURACOES (alterar: ADMIN) | `/permissoes` |

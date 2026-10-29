@@ -7,6 +7,8 @@ import { TurmaDetalhePage } from '@/pages/escola/academico/TurmaDetalhePage'
 import { TurmasPage } from '@/pages/escola/academico/TurmasPage'
 import { MateriaisPage } from '@/pages/escola/config/MateriaisPage'
 import { PerfisAcessoPage } from '@/pages/escola/config/PerfisAcessoPage'
+import { AnoLetivoPage } from '@/pages/escola/config/AnoLetivoPage'
+import { UsuariosPage } from '@/pages/escola/config/UsuariosPage'
 import { ObrigacoesPage } from '@/pages/escola/institucional/ObrigacoesPage'
 import { CalendarioPage } from '@/pages/escola/pedagogico/CalendarioPage'
 import { TurmaPedagogicaPage } from '@/pages/escola/pedagogico/TurmaPedagogicaPage'
@@ -80,6 +82,8 @@ export const router = createBrowserRouter([
       { path: 'financeiro/resumo', element: <ResumoFinanceiroPage /> },
       { path: 'financeiro/bolsas', element: <BolsasPage /> },
       { path: 'config/perfis', element: <PerfisAcessoPage /> },
+      { path: 'config/usuarios', element: <UsuariosPage /> },
+      { path: 'config/ano-letivo', element: <AnoLetivoPage /> },
       { path: 'config/materiais', element: <MateriaisPage /> },
       { path: 'obrigacoes', element: <ObrigacoesPage /> },
       { path: 'pedagogico', element: <TurmasPedagogicasPage /> },

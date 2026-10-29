@@ -22,7 +22,7 @@ import br.undb.semear.model.valueobject.Permissao;
 public class Usuario extends Entidade {
 
     private final Email email;
-    private final PerfilUsuario perfil;
+    private PerfilUsuario perfil;
     private boolean ativo;
     private final OffsetDateTime ultimoLogin;
     private final Map<Modulo, Permissao> permissoes;
@@ -42,6 +42,11 @@ public class Usuario extends Entidade {
     public boolean pode(Modulo modulo, Acao acao) {
         Permissao permissao = permissoes.get(modulo);
         return ativo && permissao != null && permissao.permite(acao);
+    }
+
+    /** Só via AdministracaoContas, que confere as regras (último admin, perfil compatível). */
+    void trocarPerfil(PerfilUsuario novo) {
+        this.perfil = Objects.requireNonNull(novo, "perfil");
     }
 
     public void desativar() {

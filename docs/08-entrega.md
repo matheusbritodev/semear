@@ -114,7 +114,6 @@ Registro completo em [02 §7](02-arquitetura.md#7-decisões-de-arquitetura-regis
 | Item | Situação |
 |---|---|
 | Liberar vaga de matrícula não paga; débito da taxa do ano seguinte conta como inadimplência; marcar documento recebido em papel; travar diário e notas antigos | Pendentes de decisão de negócio (ver avaliação de 29/10) |
-| Tela de **Usuários** (dar login a funcionários) | Não feita: hoje os logins da escola são criados no painel do Supabase e ligados por `supabase/demo_usuarios.sql` |
 | Integração real com o Cora | Simulada (D12); a real é uma nova classe de `CoraGateway` |
 | Envio real de e-mail/SMS/WhatsApp | Simulado em log; recuperação de senha depende de SMTP próprio |
 | Texto oficial do contrato | Resumo das cláusulas citadas no MODELO.md (o CONTRATO.docx não está no repositório) |

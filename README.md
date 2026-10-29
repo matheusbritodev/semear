@@ -26,6 +26,7 @@ Situação da conexão com o Supabase: [docs/06-supabase-conexao.md](docs/06-sup
 | Institucional (RF09) | Obrigações (Censo/INEP, SMTT, Sistema Presença, Cora) com aviso de prazo, comprovante e renovação automática |
 | Portal (RF06, RF10) | Responsável cria conta, acompanha cada filho (contrato, boletim, frequência, materiais, documentos) e paga as cobranças |
 | Acesso | Perfis por cargo editáveis pelo gestor, com "Restaurar padrão"; professor só vê as próprias turmas |
+| Configuração | Usuários (logins com senha provisória), abrir ano letivo, tabela de preços com reajuste, turmas e professores por turma |
 
 POO no código (detalhes em [docs/04-model-controller.md](docs/04-model-controller.md)): herança e polimorfismo (`Funcionario`, `Cobranca`, `Contrato`), Template Method (`Cobranca.calcular`, `Contrato.clausulas`, `JdbcRepository`), Strategy (`RegraEncargos`), Null Object (`SemEncargos`), Factory (`CobrancaFactory`, `ContratoFactory`, `FuncionarioFactory`, `NotificadorFactory`), Adapter (`SupabaseStorage`, `CoraGateway`), Value Objects (`Dinheiro`, `Cpf`, `ValorNota`...).
 
@@ -41,7 +42,7 @@ mvn spring-boot:run         # Model + Controller em http://localhost:8080
 npm run dev                 # View em http://localhost:5173 (chamadas /api vão para a 8080)
 
 # Testes
-mvn test                    # Java (127 testes)
+mvn test                    # Java (142 testes)
 npm test                    # View
 npm run typecheck           # checagem de tipos TypeScript
 

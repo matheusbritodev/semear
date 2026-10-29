@@ -1,4 +1,5 @@
 import {
+  CalendarCog,
   Backpack,
   BookOpen,
   Briefcase,
@@ -39,6 +40,7 @@ export const MENU_ESCOLA: ItemMenu[] = [
   { rotulo: 'Bolsas', modulo: 'BOLSAS', icone: HandCoins, rota: '/escola/financeiro/bolsas' },
   { rotulo: 'Pedagógico', modulo: 'PEDAGOGICO', icone: BookOpen, rota: '/escola/pedagogico' },
   { rotulo: 'Obrigações', modulo: 'OBRIGACOES', icone: FileText, rota: '/escola/obrigacoes' },
-  { rotulo: 'Usuários', modulo: 'USUARIOS', icone: UserCog },
+  { rotulo: 'Usuários', modulo: 'USUARIOS', icone: UserCog, rota: '/escola/config/usuarios' },
+  { rotulo: 'Ano letivo e preços', modulo: 'CONFIGURACOES', icone: CalendarCog, rota: '/escola/config/ano-letivo' },
   { rotulo: 'Perfis de acesso', modulo: 'CONFIGURACOES', icone: Settings, rota: '/escola/config/perfis' },
 ]

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { Pencil } from 'lucide-react'
 import { BarraOcupacao } from '@/components/comuns/BarraOcupacao'
+import { ProfessoresDaTurmaCard } from '@/components/comuns/ProfessoresDaTurma'
 import { Carregando, EstadoErro, EstadoVazio } from '@/components/comuns/Estados'
 import { PageHeader } from '@/components/comuns/PageHeader'
 import { StatusMatriculaBadge } from '@/components/comuns/StatusMatriculaBadge'
@@ -57,20 +58,7 @@ export function TurmaDetalhePage() {
             )}
           </p>
         </Card>
-        <Card titulo="Professores" className="md:col-span-2">
-          {professores.length === 0 ? (
-            <p className="text-sm text-slate-500">Nenhum professor vinculado.</p>
-          ) : (
-            <ul className="divide-y divide-slate-100 text-sm">
-              {professores.map((p) => (
-                <li key={`${p.funcionarioId}-${p.disciplina ?? 'pol'}`} className="flex justify-between py-2">
-                  <span>{p.nome}</span>
-                  <span className="text-slate-500">{p.disciplina ?? 'Polivalente'}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </Card>
+        <ProfessoresDaTurmaCard turmaId={turma.id} professores={professores} />
       </div>
 
       <h2 className="mb-3 text-base font-semibold text-slate-800">Alunos ({alunos.length})</h2>

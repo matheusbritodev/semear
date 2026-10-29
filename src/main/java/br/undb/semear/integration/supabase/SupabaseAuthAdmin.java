@@ -64,4 +64,27 @@ public class SupabaseAuthAdmin implements ProvedorIdentidade {
             throw new IntegracaoException("Não foi possível criar a conta agora. Tente novamente.", e);
         }
     }
+
+    @Override
+    public void definirSenha(UUID usuarioId, String senha) {
+        try {
+            http.put().uri("/admin/users/" + usuarioId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Map.of("password", senha))
+                    .retrieve()
+                    .toBodilessEntity();
+        } catch (RestClientException e) {
+            LOG.error("Supabase Auth recusou a troca de senha do usuário {}", usuarioId);
+            throw new IntegracaoException("Não foi possível trocar a senha agora. Tente novamente.", e);
+        }
+    }
+
+    @Override
+    public void remover(UUID usuarioId) {
+        try {
+            http.delete().uri("/admin/users/" + usuarioId).retrieve().toBodilessEntity();
+        } catch (RestClientException e) {
+            LOG.warn("Conta {} não removida do Supabase Auth: ficará sem cadastro na escola", usuarioId, e);
+        }
+    }
 }

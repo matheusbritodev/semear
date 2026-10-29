@@ -47,6 +47,22 @@ public final class ProfessoresDaTurma {
                 .map(Atribuicao::disciplinaId).toList();
     }
 
+    /**
+     * Novo vínculo: um único regente (sem disciplina) e um único especialista por disciplina.
+     * Repetir o mesmo vínculo também é recusado.
+     */
+    public void exigirPodeVincular(UUID professorId, UUID disciplinaId) {
+        if (disciplinaId == null && atribuicoes.stream().anyMatch(a -> a.disciplinaId() == null)) {
+            throw new br.undb.semear.model.exception.ConflitoException("TURMA_COM_REGENTE",
+                    "A turma já tem professor regente (polivalente). Remova o atual antes de trocar");
+        }
+        if (disciplinaId != null && disciplinasDeEspecialistas.contains(disciplinaId)) {
+            throw new br.undb.semear.model.exception.ConflitoException("DISCIPLINA_COM_PROFESSOR",
+                    "Esta disciplina já tem professor nesta turma");
+        }
+        Objects.requireNonNull(professorId, "professorId");
+    }
+
     /** Das disciplinas informadas, as que o professor lança nesta turma. */
     public List<UUID> disciplinasDe(UUID professorId, Collection<UUID> todas) {
         return todas.stream().filter(d -> podeLancarNotas(professorId, d)).toList();

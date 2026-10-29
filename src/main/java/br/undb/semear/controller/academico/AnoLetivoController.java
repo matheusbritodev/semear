@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.undb.semear.dto.academico.AcademicoDtos.AnoLetivoRequest;
 import br.undb.semear.dto.academico.AcademicoDtos.AnoLetivoResponse;
 import br.undb.semear.service.academico.AnoLetivoService;
 
@@ -43,5 +44,19 @@ public class AnoLetivoController {
     @PreAuthorize("@permissoes.pode('CONFIGURACOES', 'GRAVAR')")
     public Map<String, Integer> encerrar(@PathVariable int ano) {
         return Map.of("encerradas", anosLetivos.encerrar(ano));
+    }
+
+    @PostMapping
+    @org.springframework.web.bind.annotation.ResponseStatus(org.springframework.http.HttpStatus.CREATED)
+    @PreAuthorize("@permissoes.pode('CONFIGURACOES', 'GRAVAR')")
+    public AnoLetivoResponse criar(@jakarta.validation.Valid @org.springframework.web.bind.annotation.RequestBody AnoLetivoRequest pedido) {
+        return AnoLetivoResponse.de(anosLetivos.criar(pedido.ano(), pedido.dataInicio(), pedido.dataFim()), anosLetivos.hoje());
+    }
+
+    @org.springframework.web.bind.annotation.PutMapping("/{ano}")
+    @PreAuthorize("@permissoes.pode('CONFIGURACOES', 'GRAVAR')")
+    public AnoLetivoResponse alterarDatas(@PathVariable int ano,
+                                          @jakarta.validation.Valid @org.springframework.web.bind.annotation.RequestBody AnoLetivoRequest pedido) {
+        return AnoLetivoResponse.de(anosLetivos.alterarDatas(ano, pedido.dataInicio(), pedido.dataFim()), anosLetivos.hoje());
     }
 }

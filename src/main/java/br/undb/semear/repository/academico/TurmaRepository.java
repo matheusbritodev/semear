@@ -19,4 +19,17 @@ public interface TurmaRepository extends Repository<Turma, UUID> {
     List<ProfessorDaTurmaResponse> listarProfessores(UUID turmaId);
 
     boolean professorLeciona(UUID turmaId, UUID funcionarioId);
+
+    /** Quem leciona o quê na turma (regras de vínculo em ProfessoresDaTurma). */
+    br.undb.semear.model.entity.pedagogico.ProfessoresDaTurma atribuicoes(UUID turmaId);
+
+    UUID vincularProfessor(UUID turmaId, UUID funcionarioId, UUID disciplinaId);
+
+    /** Devolve false se o vínculo não era desta turma. */
+    boolean removerVinculoProfessor(UUID turmaId, UUID vinculoId);
+
+    record Disciplina(UUID id, String nome) {
+    }
+
+    List<Disciplina> disciplinas();
 }

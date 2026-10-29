@@ -8,6 +8,7 @@
     "dev": "vite",
     "typecheck": "tsc --noEmit",
     "build": "tsc --noEmit && vite build",
+    "build:vercel": "tsc --noEmit && vite build --outDir ../../../dist --emptyOutDir",
     "preview": "vite preview",
     "test": "vitest run"
   },

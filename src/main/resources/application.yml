@@ -24,6 +24,8 @@ spring:
 
 server:
   port: ${SERVER_PORT:8080}
+  # Atrás do proxy do Render: usa o IP real de quem acessa (X-Forwarded-For) no limite de contas e na evidência da assinatura.
+  forward-headers-strategy: framework
 
 semear:
   supabase:

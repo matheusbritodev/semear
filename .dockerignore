@@ -1,0 +1,11 @@
+.env
+.env.*
+.git
+node_modules
+target
+dist
+src/main/view
+src/test
+docs
+infosystem
+supabase

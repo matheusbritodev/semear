@@ -1,15 +1,60 @@
 @import "tailwindcss";
 
+/* Modo escuro por classe no <html> (aplicada pelo tema), não pela preferência do sistema direto. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Identidade visual do Semear: verde (semente/crescimento) sobre neutros. */
 @theme {
   --color-semear-50: #f1f8f2;
   --color-semear-100: #dceedf;
   --color-semear-200: #b9ddc0;
+  --color-semear-300: #8cc597;
+  --color-semear-400: #5fae6c;
   --color-semear-500: #3f9a4d;
   --color-semear-600: #2f7d3b;
   --color-semear-700: #256430;
   --color-semear-800: #1d4f26;
+  --color-semear-900: #163d1d;
+  --color-semear-950: #0b2411;
   --font-sans: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+
+  --animate-surgir: surgir 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-flutuar: flutuar 6s ease-in-out infinite;
+  --animate-balancar: balancar 0.4s ease-in-out;
+
+  @keyframes surgir {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes flutuar {
+    0%,
+    100% {
+      transform: translateY(0) rotate(var(--giro, 0deg));
+    }
+    50% {
+      transform: translateY(-12px) rotate(calc(var(--giro, 0deg) + 4deg));
+    }
+  }
+
+  @keyframes balancar {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-4px);
+    }
+    75% {
+      transform: translateX(4px);
+    }
+  }
 }
 
 html,
@@ -19,5 +64,22 @@ body,
 }
 
 body {
-  @apply bg-slate-50 text-slate-800 antialiased;
+  @apply bg-slate-50 text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-200;
+}
+
+/* Troca de tema com View Transitions: o TemaProvider anima o círculo; aqui só desligamos o fade padrão. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Navegadores sem View Transitions: cores mudam suavemente durante a troca. */
+.tema-em-transicao,
+.tema-em-transicao * {
+  transition:
+    background-color 0.6s ease,
+    color 0.6s ease,
+    border-color 0.6s ease,
+    fill 0.6s ease !important;
 }

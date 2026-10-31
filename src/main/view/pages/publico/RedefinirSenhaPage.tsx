@@ -7,7 +7,8 @@ import { esquemaSenha, mensagemAuth } from '@/auth/mensagensAuth'
 import { useAuth } from '@/auth/useAuth'
 import { TelaCarregando } from '@/components/comuns/TelaCarregando'
 import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
+import { AlertaFormulario, CabecalhoPublico, emCascata } from '@/components/publico/Formulario'
+import { InputSenha } from '@/components/ui/InputSenha'
 
 const esquema = z
   .object({ senha: esquemaSenha, confirmacao: z.string() })
@@ -33,9 +34,8 @@ export function RedefinirSenhaPage() {
   if (!session) {
     return (
       <div className="space-y-4 text-center">
-        <h1 className="text-2xl font-semibold text-slate-900">Link inválido ou expirado</h1>
-        <p className="text-sm text-slate-600">Peça um novo link de recuperação.</p>
-        <Link to="/recuperar-senha" className="inline-block text-sm font-medium text-semear-700 hover:underline">
+        <CabecalhoPublico titulo="Link inválido ou expirado" descricao="Peça um novo link de recuperação." />
+        <Link to="/recuperar-senha" className="inline-block text-sm font-medium text-semear-700 hover:underline dark:text-semear-400">
           Recuperar senha
         </Link>
       </div>
@@ -53,21 +53,18 @@ export function RedefinirSenhaPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-semibold text-slate-900">Nova senha</h1>
-      <form onSubmit={handleSubmit(enviar)} className="space-y-4" noValidate>
-        <Input rotulo="Nova senha" type="password" autoComplete="new-password" erro={errors.senha?.message} {...register('senha')} />
-        <Input
+    <div className="space-y-7">
+      <CabecalhoPublico titulo="Nova senha" descricao="Escolha uma senha que só você saiba." />
+      <form onSubmit={handleSubmit(enviar)} className="space-y-4 motion-safe:animate-surgir" style={emCascata(1)} noValidate>
+        <InputSenha rotulo="Nova senha" autoComplete="new-password" erro={errors.senha?.message} {...register('senha')} />
+        <InputSenha
           rotulo="Repita a nova senha"
-          type="password"
           autoComplete="new-password"
           erro={errors.confirmacao?.message}
           {...register('confirmacao')}
         />
         {erro && (
-          <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
-            {erro}
-          </p>
+          <AlertaFormulario>{erro}</AlertaFormulario>
         )}
         <Button type="submit" className="w-full" carregando={isSubmitting}>
           Salvar nova senha

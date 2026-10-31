@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
-import { Pencil, Plus } from 'lucide-react'
+import { Pencil, Plus } from '@/components/ui/icones'
 import { Carregando, EstadoErro, EstadoVazio } from '@/components/comuns/Estados'
 import { PageHeader } from '@/components/comuns/PageHeader'
 import { SeletorAno } from '@/components/comuns/SeletorAno'

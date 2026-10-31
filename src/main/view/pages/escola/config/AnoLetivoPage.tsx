@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
-import { CalendarPlus, Copy, Pencil, Plus, Trash2 } from 'lucide-react'
+import { CalendarPlus, Copy, Pencil, Plus, Trash2 } from '@/components/ui/icones'
 import { BarraOcupacao } from '@/components/comuns/BarraOcupacao'
 import { Carregando, EstadoErro } from '@/components/comuns/Estados'
 import { PageHeader } from '@/components/comuns/PageHeader'

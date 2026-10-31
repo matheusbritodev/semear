@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { CheckCircle2, Circle, Eye, FileText, Trash2, Upload } from 'lucide-react'
+import { CheckCircle2, Circle, Eye, FileText, Trash2, Upload } from '@/components/ui/icones'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { useDocumentos } from '@/hooks/useDocumentos'

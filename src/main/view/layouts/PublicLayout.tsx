@@ -4,9 +4,9 @@ import { Logo } from '@/components/comuns/Logo'
 import { PainelEscola } from '@/components/publico/PainelEscola'
 import { useAplicarTema } from '@/tema/useTema'
 
-/** Telas sem login: entrar, criar conta, recuperar senha. Únicas, por enquanto, com modo escuro. */
+/** Telas sem login: entrar, criar conta, recuperar senha. */
 export function PublicLayout() {
-  useAplicarTema()
+  useAplicarTema('publico')
   const local = useLocation()
 
   return (

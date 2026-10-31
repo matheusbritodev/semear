@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Copy, KeyRound, Plus, UserCheck, UserX } from 'lucide-react'
+import { Copy, KeyRound, Plus, UserCheck, UserX } from '@/components/ui/icones'
 import { CampoBusca } from '@/components/comuns/CampoBusca'
 import { Carregando, EstadoErro, EstadoVazio } from '@/components/comuns/Estados'
 import { PageHeader } from '@/components/comuns/PageHeader'

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation, useParams } from 'react-router'
-import { FileWarning, Mail, Phone, Wallet } from 'lucide-react'
+import { FileWarning, Mail, Phone, Wallet } from '@/components/ui/icones'
 import { useAuth } from '@/auth/useAuth'
 import { CartaoRematricula } from '@/components/comuns/CartaoRematricula'
 import { ChecklistDocumentos } from '@/components/comuns/ChecklistDocumentos'

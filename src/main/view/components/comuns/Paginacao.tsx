@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from '@/components/ui/icones'
 import { Button } from '@/components/ui/Button'
 
 interface Props {
@@ -14,19 +14,23 @@ export function Paginacao({ pagina, tamanho, total, aoMudar }: Props) {
   const fim = Math.min(total, (pagina + 1) * tamanho)
 
   return (
-    <nav className="mt-3 flex flex-wrap items-center justify-between gap-2 text-sm text-slate-500" aria-label="Paginação">
+    <nav className="mt-4 flex flex-wrap items-center justify-between gap-2 text-sm text-slate-500" aria-label="Paginação">
       <span>
-        {inicio}–{fim} de {total}
+        <strong className="font-medium text-slate-700">
+          {inicio}–{fim}
+        </strong>{' '}
+        de {total}
       </span>
       <div className="flex items-center gap-1">
-        <Button variante="secundario" disabled={pagina === 0} onClick={() => aoMudar(pagina - 1)} aria-label="Página anterior">
+        <Button variante="secundario" className="px-2.5!" disabled={pagina === 0} onClick={() => aoMudar(pagina - 1)} aria-label="Página anterior">
           <ChevronLeft className="size-4" aria-hidden />
         </Button>
-        <span className="px-2">
+        <span className="min-w-14 px-2 text-center tabular-nums">
           {pagina + 1} / {totalPaginas}
         </span>
         <Button
           variante="secundario"
+          className="px-2.5!"
           disabled={pagina + 1 >= totalPaginas}
           onClick={() => aoMudar(pagina + 1)}
           aria-label="Próxima página"

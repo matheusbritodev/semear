@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
-import { Check, X } from 'lucide-react'
+import { Check, X } from '@/components/ui/icones'
 import { BarraOcupacao } from '@/components/comuns/BarraOcupacao'
 import { Carregando, EstadoErro } from '@/components/comuns/Estados'
 import { PageHeader } from '@/components/comuns/PageHeader'

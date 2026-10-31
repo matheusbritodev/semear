@@ -1,4 +1,4 @@
-import { LoaderCircle } from 'lucide-react'
+import { LoaderCircle } from '@/components/ui/icones'
 
 export function TelaCarregando({ texto = 'Carregando…' }: { texto?: string }) {
   return (

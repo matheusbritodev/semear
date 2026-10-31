@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router'
-import { Ban, Banknote } from 'lucide-react'
+import { Ban, Banknote } from '@/components/ui/icones'
 import { Carregando, EstadoErro } from '@/components/comuns/Estados'
 import { PageHeader } from '@/components/comuns/PageHeader'
 import { StatusMatriculaBadge } from '@/components/comuns/StatusMatriculaBadge'

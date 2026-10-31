@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router'
-import { MessageCircle, Phone } from 'lucide-react'
+import { MessageCircle, Phone } from '@/components/ui/icones'
 import { CampoBusca } from '@/components/comuns/CampoBusca'
 import { Carregando, EstadoErro, EstadoVazio } from '@/components/comuns/Estados'
 import { PageHeader } from '@/components/comuns/PageHeader'

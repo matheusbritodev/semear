@@ -3,6 +3,7 @@ import { Navigate, useLocation } from 'react-router'
 import { TelaCarregando } from '@/components/comuns/TelaCarregando'
 import { Button } from '@/components/ui/Button'
 import { usaPortal } from '@/models/enums'
+import { useAplicarTema } from '@/tema/useTema'
 import { useAuth } from './useAuth'
 
 interface Props {
@@ -10,10 +11,11 @@ interface Props {
   children: ReactNode
 }
 
-/** Exige login e envia cada perfil para a sua área (escola ou portal). */
+/** Exige login e envia cada perfil para a sua área (escola ou portal), já com o tema escolhido. */
 export function ProtectedRoute({ area, children }: Props) {
   const { carregando, session, sessao, erro, recarregar } = useAuth()
   const local = useLocation()
+  useAplicarTema('interno')
 
   if (carregando) return <TelaCarregando />
   if (!session) return <Navigate to="/login" replace state={{ de: local.pathname }} />
@@ -39,6 +41,7 @@ export function ProtectedRoute({ area, children }: Props) {
 /** Rota "/": manda para o login ou para a área do perfil. */
 export function RedirecionarPorPerfil() {
   const { carregando, session, sessao } = useAuth()
+  useAplicarTema('interno')
   if (carregando) return <TelaCarregando />
   if (!session) return <Navigate to="/login" replace />
   const perfil = sessao?.perfil

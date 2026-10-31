@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { BellRing, Check } from 'lucide-react'
+import { BellRing, Check } from '@/components/ui/icones'
 import { useAlertas, useMarcarAlertaLido } from '@/hooks/useAcademico'
 import { usePermissao } from '@/hooks/useUtilitarios'
 import { Button } from '@/components/ui/Button'
@@ -18,9 +18,11 @@ export function AlertasTurmas() {
       {alertas.data.map((alerta) => (
         <div
           key={alerta.id}
-          className="flex flex-col items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm sm:flex-row sm:items-center sm:gap-3"
+          className="flex flex-col items-start gap-2 rounded-2xl border border-amber-200/80 bg-amber-50/80 px-4 py-3 text-sm motion-safe:animate-entrar sm:flex-row sm:items-center sm:gap-3"
         >
-          <BellRing className="size-4 shrink-0 text-amber-600" aria-hidden />
+          <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-amber-100 text-amber-600">
+            <BellRing className="size-4" aria-hidden />
+          </span>
           <p className="flex-1 text-amber-900">
             <strong className="font-semibold">Turma lotada.</strong> {alerta.mensagem}{' '}
             {alerta.turmaId && (

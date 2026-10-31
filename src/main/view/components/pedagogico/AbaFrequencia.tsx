@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle } from '@/components/ui/icones'
 import { Carregando, EstadoErro } from '@/components/comuns/Estados'
 import { Tabela, Td, Th, Tr } from '@/components/comuns/Tabela'
 import { Badge } from '@/components/ui/Badge'

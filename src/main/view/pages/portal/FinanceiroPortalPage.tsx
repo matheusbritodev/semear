@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight } from '@/components/ui/icones'
 import { Carregando, EstadoErro } from '@/components/comuns/Estados'
 import { StatusCobrancaBadge } from '@/components/comuns/StatusBadges'
 import { Card } from '@/components/ui/Card'

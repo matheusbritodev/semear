@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
-import { CalendarPlus } from 'lucide-react'
+import { CalendarPlus } from '@/components/ui/icones'
 import { CampoBusca } from '@/components/comuns/CampoBusca'
 import { Carregando, EstadoErro, EstadoVazio } from '@/components/comuns/Estados'
 import { PageHeader } from '@/components/comuns/PageHeader'

@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { ClipboardList } from 'lucide-react'
+import { ClipboardList } from '@/components/ui/icones'
 import { useAuth } from '@/auth/useAuth'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'

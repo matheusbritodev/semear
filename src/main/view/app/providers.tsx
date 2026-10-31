@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { IconContext, type IconProps } from '@phosphor-icons/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider } from '@/auth/AuthProvider'
 import { ApiError } from '@/lib/ApiError'
@@ -14,12 +15,17 @@ const queryClient = new QueryClient({
   },
 })
 
+// Estilo padrão dos ícones (components/ui/icones.ts): contorno com preenchimento suave.
+const ICONES: IconProps = { weight: 'duotone' }
+
 export function Providers({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <TemaProvider>
-        <AuthProvider>{children}</AuthProvider>
-      </TemaProvider>
+      <IconContext.Provider value={ICONES}>
+        <TemaProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </TemaProvider>
+      </IconContext.Provider>
     </QueryClientProvider>
   )
 }

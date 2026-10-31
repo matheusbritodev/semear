@@ -3,7 +3,7 @@ import type { ReactNode, ThHTMLAttributes, TdHTMLAttributes } from 'react'
 /** Tabela com rolagem horizontal no celular. */
 export function Tabela({ children, legenda }: { children: ReactNode; legenda: string }) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-xs">
+    <div className="sombra-cartao overflow-x-auto rounded-2xl border border-slate-200/80 bg-white">
       <table className="w-full text-left text-sm">
         <caption className="sr-only">{legenda}</caption>
         {children}
@@ -16,7 +16,7 @@ export function Th({ className = '', ...resto }: ThHTMLAttributes<HTMLTableCellE
   return (
     <th
       scope="col"
-      className={`border-b border-slate-200 bg-slate-50 px-4 py-2.5 text-xs font-semibold tracking-wide text-slate-500 uppercase ${className}`}
+      className={`border-b border-slate-200/80 bg-slate-50/80 px-4 py-3 text-[11px] font-semibold tracking-wider text-slate-500 uppercase ${className}`}
       {...resto}
     />
   )
@@ -27,5 +27,9 @@ export function Td({ className = '', ...resto }: TdHTMLAttributes<HTMLTableCellE
 }
 
 export function Tr({ children, destacar = false }: { children: ReactNode; destacar?: boolean }) {
-  return <tr className={`last:[&>td]:border-0 hover:bg-slate-50/70 ${destacar ? 'bg-slate-50/50' : ''}`}>{children}</tr>
+  return (
+    <tr className={`transition-colors duration-150 last:[&>td]:border-0 hover:bg-semear-50/40 ${destacar ? 'bg-slate-50/60' : ''}`}>
+      {children}
+    </tr>
+  )
 }

@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { BookOpen, CalendarCheck, FileText, Plus, Wallet } from 'lucide-react'
+import { BookOpen, CalendarCheck, FileText, Plus, Wallet } from '@/components/ui/icones'
 import { useAuth } from '@/auth/useAuth'
 import { Carregando, EstadoErro } from '@/components/comuns/Estados'
 import { StatusMatriculaBadge } from '@/components/comuns/StatusMatriculaBadge'

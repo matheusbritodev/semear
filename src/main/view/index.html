@@ -7,14 +7,19 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='16' fill='%232f7d3b'/><path d='M16 24V14M16 14c0-4 3-7 7-7 0 4-3 7-7 7zm0 3c0-3-2-6-6-6 0 3 2 6 6 6z' stroke='white' stroke-width='2' fill='none' stroke-linecap='round'/></svg>" />
     <title>Semear · Gestão Escolar</title>
     <script>
-      // Aplica o modo escuro antes do React para a tela não piscar em branco (ver tema/TemaProvider.tsx).
-      // Por enquanto só as telas públicas têm modo escuro.
+      // Aplica o modo escuro antes do React para a tela não piscar em branco (ver tema/useTema.ts).
+      // Telas públicas usam a classe "dark"; a área interna (escola e portal) usa "tema-escuro".
       try {
         var preferencia = localStorage.getItem('semear-tema')
-        var publica = /^\/(login|cadastro|recuperar-senha|redefinir-senha)\/?$/.test(location.pathname)
+        var caminho = location.pathname
+        var classe = /^\/(login|cadastro|recuperar-senha|redefinir-senha)\/?$/.test(caminho)
+          ? 'dark'
+          : /^\/((escola|portal)(\/.*)?)?$/.test(caminho)
+            ? 'tema-escuro'
+            : null
         var escuro = preferencia === 'escuro' || (preferencia !== 'claro' && matchMedia('(prefers-color-scheme: dark)').matches)
-        if (publica && escuro) {
-          document.documentElement.classList.add('dark')
+        if (classe && escuro) {
+          document.documentElement.classList.add(classe)
           document.documentElement.style.colorScheme = 'dark'
         }
       } catch (e) {}

@@ -8,20 +8,25 @@ export function useTema(): TemaContexto {
 }
 
 /**
- * Aplica o tema na página enquanto o componente estiver montado.
- * Por enquanto só as telas públicas têm modo escuro; ao sair delas, a página volta ao claro.
+ * Classe que liga o modo escuro em cada área (a mesma regra está no script de index.html):
+ * - telas públicas: `dark`, com as variantes `dark:` escritas à mão em cada componente;
+ * - área interna (escola e portal): `tema-escuro`, que troca a paleta inteira em styles/globals.css.
  */
-export function useAplicarTema() {
+const CLASSE_ESCURA = { publico: 'dark', interno: 'tema-escuro' } as const
+
+/** Aplica o tema escolhido na página enquanto o componente estiver montado. */
+export function useAplicarTema(area: keyof typeof CLASSE_ESCURA) {
   const { tema } = useTema()
 
   // useLayoutEffect: a classe muda no mesmo quadro da troca, o que a View Transition precisa para capturar o "depois".
   useLayoutEffect(() => {
     const raiz = document.documentElement
-    raiz.classList.toggle('dark', tema === 'escuro')
+    const classe = CLASSE_ESCURA[area]
+    raiz.classList.toggle(classe, tema === 'escuro')
     raiz.style.colorScheme = tema === 'escuro' ? 'dark' : 'light'
     return () => {
-      raiz.classList.remove('dark')
+      raiz.classList.remove(classe)
       raiz.style.colorScheme = ''
     }
-  }, [tema])
+  }, [area, tema])
 }

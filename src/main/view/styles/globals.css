@@ -112,6 +112,71 @@ body {
   @apply bg-slate-50 text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-200;
 }
 
+/*
+ * Modo escuro da área interna (escola e portal), ligado pela classe .tema-escuro (tema/useTema.ts).
+ * Em vez de uma variante dark: em cada tela, a paleta é trocada aqui: fundos claros viram escuros e
+ * textos escuros viram claros, e todas as telas acompanham. Só na tela: a impressão continua clara.
+ * As telas públicas não usam isto: lá o escuro vem das variantes dark: (classe .dark).
+ */
+@media screen {
+  html.tema-escuro {
+    --color-white: #121a24;
+
+    --color-slate-50: #0b1118;
+    --color-slate-100: #18212c;
+    --color-slate-200: #243040;
+    --color-slate-300: #334155;
+    --color-slate-400: #5b6b80;
+    --color-slate-500: #8794a8;
+    --color-slate-600: #a7b3c3;
+    --color-slate-700: #c3ccd8;
+    --color-slate-800: #dde3eb;
+    --color-slate-900: #eef2f6;
+    --color-slate-950: #f8fafc;
+
+    --color-semear-50: #11281b;
+    --color-semear-100: #173523;
+    --color-semear-200: #21472f;
+    --color-semear-300: #2f6a42;
+    --color-semear-600: #3a8f47;
+    --color-semear-700: #8cc597;
+    --color-semear-800: #b9ddc0;
+    --color-semear-900: #dceedf;
+    --color-semear-950: #f1f8f2;
+
+    --color-amber-50: #2a1f0b;
+    --color-amber-100: #3b2b0d;
+    --color-amber-200: #5c4212;
+    --color-amber-300: #7c5a17;
+    --color-amber-600: #f2a516;
+    --color-amber-700: #f8c146;
+    --color-amber-800: #fbd36b;
+    --color-amber-900: #fde3a0;
+
+    --color-red-50: #2b1317;
+    --color-red-100: #3f171c;
+    --color-red-200: #5e2026;
+    --color-red-300: #7f2a31;
+    --color-red-600: #ef4444;
+    --color-red-700: #f59a9a;
+    --color-red-800: #fbc2c2;
+    --color-red-900: #fde0e0;
+
+    --color-sky-50: #0c2333;
+    --color-sky-100: #0f2e44;
+    --color-sky-200: #154461;
+    --color-sky-600: #38bdf8;
+    --color-sky-700: #7dd3fc;
+    --color-sky-800: #bae6fd;
+  }
+
+  /* Texto branco continua branco: ele está sempre sobre um fundo colorido (botões, selos). */
+  html.tema-escuro .text-white,
+  html.tema-escuro .group:hover .group-hover\:text-white {
+    color: #fff;
+  }
+}
+
 /* Sombra padrão de cartões e tabelas: bem leve, só para destacar do fundo */
 @utility sombra-cartao {
   box-shadow:

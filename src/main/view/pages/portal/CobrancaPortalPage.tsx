@@ -106,7 +106,7 @@ export function CobrancaPortalPage() {
             href={c.linkPagamento}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-4 inline-flex items-center rounded-lg bg-semear-600 px-4 py-2 text-sm font-medium text-white hover:bg-semear-700"
+            className="mt-4 inline-flex items-center rounded-lg bg-semear-600 px-4 py-2 text-sm font-medium text-white hover:brightness-90"
           >
             Abrir boleto
           </a>

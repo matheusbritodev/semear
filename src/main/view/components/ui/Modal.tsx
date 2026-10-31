@@ -27,7 +27,7 @@ export function Modal({ aberto, titulo, aoFechar, children, rodape }: Props) {
         e.preventDefault()
         aoFechar()
       }}
-      className="m-auto w-[calc(100%-2rem)] max-w-lg rounded-2xl border border-slate-200 bg-white p-0 shadow-2xl shadow-slate-900/20 backdrop:bg-slate-900/40 backdrop:backdrop-blur-[2px] motion-safe:open:animate-modal motion-safe:backdrop:animate-esmaecer"
+      className="m-auto w-[calc(100%-2rem)] max-w-lg rounded-2xl border border-slate-200 bg-white p-0 shadow-2xl shadow-black/20 backdrop:bg-black/40 backdrop:backdrop-blur-[2px] motion-safe:open:animate-modal motion-safe:backdrop:animate-esmaecer"
     >
       {aberto && (
         <div className="flex max-h-[85vh] flex-col">

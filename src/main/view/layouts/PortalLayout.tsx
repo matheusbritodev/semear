@@ -1,6 +1,7 @@
 import { Link, NavLink, Outlet, useLocation } from 'react-router'
 import { CalendarCheck, ClipboardText, House, KeyRound, LogOut, Wallet, type TipoIcone } from '@/components/ui/icones'
 import { useAuth } from '@/auth/useAuth'
+import { AlternarTema } from '@/components/comuns/AlternarTema'
 import { Avatar } from '@/components/comuns/Avatar'
 import { Logo } from '@/components/comuns/Logo'
 
@@ -23,6 +24,7 @@ export function PortalLayout() {
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-3 px-4">
           <Logo />
           <div className="flex items-center gap-1">
+            <AlternarTema className="mr-2" />
             <div className="mr-2 hidden items-center gap-2.5 sm:flex">
               <Avatar nome={sessao?.nome ?? sessao?.email} className="size-8" />
               <span className="max-w-48 truncate text-sm font-medium text-slate-700">{sessao?.nome ?? sessao?.email}</span>

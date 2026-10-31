@@ -85,7 +85,7 @@ function Contratos({ alunoId }: { alunoId: string }) {
                   <Link
                     to={`/portal/contratos/${c.id}`}
                     className={`inline-flex items-center gap-1 rounded-lg px-3 py-1.5 font-medium ${
-                      c.podeAssinar ? 'bg-semear-600 text-white hover:bg-semear-700' : 'text-semear-700 hover:underline'
+                      c.podeAssinar ? 'bg-semear-600 text-white hover:brightness-90' : 'text-semear-700 hover:underline'
                     }`}
                   >
                     {c.podeAssinar ? (

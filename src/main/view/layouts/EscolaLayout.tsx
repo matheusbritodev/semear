@@ -3,6 +3,7 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router'
 import { ChevronRight, House, KeyRound, LogOut, Menu, X, type TipoIcone } from '@/components/ui/icones'
 import { useAuth } from '@/auth/useAuth'
 import { pode } from '@/auth/permissions'
+import { AlternarTema } from '@/components/comuns/AlternarTema'
 import { Avatar } from '@/components/comuns/Avatar'
 import { Logo } from '@/components/comuns/Logo'
 import { ROTULO_PERFIL } from '@/models/enums'
@@ -151,7 +152,7 @@ export function EscolaLayout() {
       {/* Computador: a faixa reserva o espaço dos ícones; o menu aberto passa por cima do conteúdo */}
       <div className="hidden w-[68px] shrink-0 md:block print:hidden">
         <aside
-          className="group/menu fixed inset-y-0 left-0 z-40 flex w-[68px] flex-col overflow-hidden border-r border-slate-200/80 bg-white transition-[width,box-shadow] delay-200 duration-300 ease-[cubic-bezier(0.2,0.7,0.2,1)] has-focus-visible:w-68 has-focus-visible:shadow-2xl has-focus-visible:shadow-slate-900/15 hover:w-68 hover:shadow-2xl hover:shadow-slate-900/15 hover:delay-75 motion-reduce:transition-none"
+          className="group/menu fixed inset-y-0 left-0 z-40 flex w-[68px] flex-col overflow-hidden border-r border-slate-200/80 bg-white transition-[width,box-shadow] delay-200 duration-300 ease-[cubic-bezier(0.2,0.7,0.2,1)] has-focus-visible:w-68 has-focus-visible:shadow-2xl has-focus-visible:shadow-black/20 hover:w-68 hover:shadow-2xl hover:shadow-black/20 hover:delay-75 motion-reduce:transition-none"
         >
           <div className="flex h-16 shrink-0 items-center px-[18px]">
             <Logo classeNome={ESMAECE_RECOLHIDO} />
@@ -164,7 +165,7 @@ export function EscolaLayout() {
       {menuAberto && (
         <div className="fixed inset-0 z-40 md:hidden">
           <button
-            className="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] motion-safe:animate-esmaecer"
+            className="absolute inset-0 bg-black/40 backdrop-blur-[2px] motion-safe:animate-esmaecer"
             aria-label="Fechar menu"
             onClick={() => setMenuAberto(false)}
           />
@@ -205,8 +206,11 @@ export function EscolaLayout() {
               <span className="font-medium text-slate-800">Início</span>
             )}
           </nav>
-          <p className="ml-auto hidden text-sm text-slate-500 first-letter:uppercase lg:block">{dataDeHoje.format(new Date())}</p>
-          <Avatar nome={sessao?.nome ?? sessao?.email} className="ml-auto md:hidden" />
+          <div className="ml-auto flex items-center gap-4">
+            <p className="hidden text-sm text-slate-500 first-letter:uppercase lg:block">{dataDeHoje.format(new Date())}</p>
+            <AlternarTema />
+            <Avatar nome={sessao?.nome ?? sessao?.email} className="md:hidden" />
+          </div>
         </header>
 
         <main className="flex-1 p-4 md:p-8 print:p-0">

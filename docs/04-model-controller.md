@@ -627,6 +627,7 @@ Convenções: JSON, `camelCase`, datas ISO-8601, dinheiro como string decimal (`
 | GET | `/api/auditoria` ✅ | AUDITORIA:L | Trilha com filtros (tabela, usuarioId, registroId, de, ate) e campos alterados |
 | GET | `/api/auditoria/verificacao` ✅ | AUDITORIA:L | Recalcula a cadeia de hashes e confere as âncoras das revisões |
 | GET | `/api/auditoria/autores`, `/api/auditoria/tabelas` ✅ | AUDITORIA:L | Opções dos filtros |
+| GET | `/api/relatorios/alunos?ano=&turmaId=` ✅ | ALUNOS:L | Relatório de alunos matriculados com totais por situação e turma (`RelatorioAlunos`); sem CPF; professor só as próprias turmas |
 | GET | `/api/revisao-acessos` ✅ | USUARIOS:L | Contas da equipe com alertas, conflitos de SoD, próxima revisão e histórico |
 | POST | `/api/revisao-acessos` ✅ | USUARIOS:G | Registra a revisão (foto das contas + âncora da trilha) |
 

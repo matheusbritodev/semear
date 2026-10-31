@@ -14,6 +14,15 @@ Arquitetura **MVC** em um único projeto:
 **Comece pela documentação:** [docs/README.md](docs/README.md).
 Situação da conexão com o Supabase: [docs/06-supabase-conexao.md](docs/06-supabase-conexao.md).
 
+## Requisitos mínimos do professor
+
+| Exigência | Onde está | Como foi testado |
+|---|---|---|
+| Tela de login segura | `/login` (Supabase Auth). A API Java confere a assinatura, o emissor e a validade do token em toda requisição. A senha fica mascarada, o erro é genérico ("E-mail ou senha incorretos") e a senha forte é exigida no cadastro | Senha errada recusada, token inventado ou adulterado recusado (401), sem login → redireciona para `/login` |
+| Painel principal | `/escola` (indicadores de turmas, pendências, obrigações, inadimplência, aprovações) | Abre por perfil, sem erros |
+| Cadastro completo (CRUD) no banco | **Obrigações** (`/escola/obrigacoes`): nova, lista, editar, apagar. Também Turmas e Listas de materiais | Inserir → listar → atualizar → excluir pela tela e pela API; permissões por perfil (403) |
+| Relatório com os dados cadastrados | **Relatório de alunos** (`/escola/relatorios`): filtros por ano e turma, totais, **Imprimir / PDF** e **Planilha (CSV)** | Total confere com o cadastro, sem CPF (LGPD), professor só vê as próprias turmas |
+
 ## O que o sistema faz
 
 | Área | Funcionalidades |
@@ -43,7 +52,7 @@ mvn spring-boot:run         # Model + Controller em http://localhost:8080
 npm run dev                 # View em http://localhost:5173 (chamadas /api vão para a 8080)
 
 # Testes
-mvn test                    # Java (166 testes)
+mvn test                    # Java (170 testes)
 npm test                    # View
 npm run typecheck           # checagem de tipos TypeScript
 

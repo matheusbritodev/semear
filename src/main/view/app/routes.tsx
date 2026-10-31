@@ -12,6 +12,7 @@ import { UsuariosPage } from '@/pages/escola/config/UsuariosPage'
 import { AprovacoesPage } from '@/pages/escola/controle/AprovacoesPage'
 import { AuditoriaPage } from '@/pages/escola/controle/AuditoriaPage'
 import { RevisaoAcessosPage } from '@/pages/escola/controle/RevisaoAcessosPage'
+import { RelatoriosPage } from '@/pages/escola/relatorio/RelatoriosPage'
 import { ObrigacoesPage } from '@/pages/escola/institucional/ObrigacoesPage'
 import { CalendarioPage } from '@/pages/escola/pedagogico/CalendarioPage'
 import { TurmaPedagogicaPage } from '@/pages/escola/pedagogico/TurmaPedagogicaPage'
@@ -91,6 +92,7 @@ export const router = createBrowserRouter([
       { path: 'config/revisao-acessos', element: <RevisaoAcessosPage /> },
       { path: 'aprovacoes', element: <AprovacoesPage /> },
       { path: 'auditoria', element: <AuditoriaPage /> },
+      { path: 'relatorios', element: <RelatoriosPage /> },
       { path: 'obrigacoes', element: <ObrigacoesPage /> },
       { path: 'pedagogico', element: <TurmasPedagogicasPage /> },
       { path: 'pedagogico/turmas/:id', element: <TurmaPedagogicaPage /> },

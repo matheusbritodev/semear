@@ -5,6 +5,7 @@ import {
   CalendarDots,
   Chalkboard,
   ClipboardText,
+  Printer,
   FileText,
   FileWarning,
   HandCoins,
@@ -37,6 +38,7 @@ export const GRUPOS_MENU: GrupoMenu[] = ['Pessoas', 'Matrícula', 'Financeiro', 
 /** Menu da Área da escola. Cada item aparece se o perfil puder LER o módulo. */
 export const MENU_ESCOLA: ItemMenu[] = [
   { rotulo: 'Alunos', modulo: 'ALUNOS', icone: Student, grupo: 'Pessoas', rota: '/escola/alunos' },
+  { rotulo: 'Relatório de alunos', modulo: 'ALUNOS', icone: Printer, grupo: 'Pessoas', rota: '/escola/relatorios' },
   { rotulo: 'Responsáveis', modulo: 'ALUNOS', icone: UsersThree, grupo: 'Pessoas', rota: '/escola/responsaveis' },
   { rotulo: 'Funcionários', modulo: 'RH', icone: Briefcase, grupo: 'Pessoas', rota: '/escola/rh/funcionarios' },
   { rotulo: 'Pré-matrículas', modulo: 'MATRICULA', icone: Tray, grupo: 'Matrícula', rota: '/escola/pre-matriculas' },

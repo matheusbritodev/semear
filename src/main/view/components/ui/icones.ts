@@ -88,5 +88,6 @@ export {
   Trash as Trash2,
   UploadSimple as Upload,
   UserMinus as UserX,
+  DownloadSimple as Download,
   ShieldWarning as ShieldAlert,
 } from '@phosphor-icons/react'

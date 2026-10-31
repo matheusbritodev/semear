@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Plus } from 'lucide-react'
+import { Plus } from '@/components/ui/icones'
 import { Carregando, EstadoErro } from '@/components/comuns/Estados'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'

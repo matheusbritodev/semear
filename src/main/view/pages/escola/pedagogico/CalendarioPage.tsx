@@ -1,5 +1,5 @@
 import { useMemo, useState, type FormEvent } from 'react'
-import { Plus, Trash2 } from 'lucide-react'
+import { Plus, Trash2 } from '@/components/ui/icones'
 import { Carregando, EstadoErro, EstadoVazio } from '@/components/comuns/Estados'
 import { PageHeader } from '@/components/comuns/PageHeader'
 import { SeletorAno } from '@/components/comuns/SeletorAno'

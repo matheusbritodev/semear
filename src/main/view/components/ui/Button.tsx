@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes } from 'react'
-import { LoaderCircle } from 'lucide-react'
+import { LoaderCircle } from '@/components/ui/icones'
 
 type Variante = 'primario' | 'secundario' | 'fantasma'
 

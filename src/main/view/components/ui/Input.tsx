@@ -1,11 +1,11 @@
 import { useId, type InputHTMLAttributes, type ReactNode } from 'react'
-import type { LucideIcon } from 'lucide-react'
+import type { TipoIcone } from '@/components/ui/icones'
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   rotulo: string
   erro?: string
   /** Ícone à esquerda, dentro do campo. */
-  icone?: LucideIcon
+  icone?: TipoIcone
   /** Elemento à direita, dentro do campo (ex.: botão de mostrar senha). */
   acessorio?: ReactNode
 }

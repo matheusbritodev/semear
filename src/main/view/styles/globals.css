@@ -21,6 +21,51 @@
   --animate-surgir: surgir 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   --animate-flutuar: flutuar 6s ease-in-out infinite;
   --animate-balancar: balancar 0.4s ease-in-out;
+  /* Área interna: movimentos curtos e discretos */
+  --animate-entrar: entrar 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-modal: modal 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+  --animate-esmaecer: esmaecer 0.25s ease-out;
+  --animate-gaveta: gaveta 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  @keyframes entrar {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes modal {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes esmaecer {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes gaveta {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: none;
+    }
+  }
 
   @keyframes surgir {
     from {
@@ -65,6 +110,13 @@ body,
 
 body {
   @apply bg-slate-50 text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-200;
+}
+
+/* Sombra padrão de cartões e tabelas: bem leve, só para destacar do fundo */
+@utility sombra-cartao {
+  box-shadow:
+    0 1px 2px rgb(15 23 42 / 0.04),
+    0 6px 20px -12px rgb(15 23 42 / 0.12);
 }
 
 /* Troca de tema com View Transitions: o TemaProvider anima o círculo; aqui só desligamos o fade padrão. */

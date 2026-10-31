@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Plus } from 'lucide-react'
+import { Plus } from '@/components/ui/icones'
 import { CampoBusca } from '@/components/comuns/CampoBusca'
 import { Carregando, EstadoErro, EstadoVazio } from '@/components/comuns/Estados'
 import { PageHeader } from '@/components/comuns/PageHeader'

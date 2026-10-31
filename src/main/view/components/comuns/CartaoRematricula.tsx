@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { CalendarCheck } from 'lucide-react'
+import { CalendarCheck } from '@/components/ui/icones'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'

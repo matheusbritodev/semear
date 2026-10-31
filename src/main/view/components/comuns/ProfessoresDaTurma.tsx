@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Plus, Trash2 } from 'lucide-react'
+import { Plus, Trash2 } from '@/components/ui/icones'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Select } from '@/components/ui/Select'

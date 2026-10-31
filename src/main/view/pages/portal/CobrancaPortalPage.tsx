@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router'
-import { ArrowLeft, CheckCircle2, FlaskConical } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, FlaskConical } from '@/components/ui/icones'
 import { Carregando, EstadoErro } from '@/components/comuns/Estados'
 import { StatusCobrancaBadge } from '@/components/comuns/StatusBadges'
 import { ComposicaoValor } from '@/components/financeiro/ComposicaoValor'

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router'
-import { Pencil } from 'lucide-react'
+import { Pencil } from '@/components/ui/icones'
 import { BarraOcupacao } from '@/components/comuns/BarraOcupacao'
 import { ProfessoresDaTurmaCard } from '@/components/comuns/ProfessoresDaTurma'
 import { Carregando, EstadoErro, EstadoVazio } from '@/components/comuns/Estados'

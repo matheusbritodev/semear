@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router'
-import { ArrowLeft, ArrowRight, FileSignature, FileText } from 'lucide-react'
+import { ArrowLeft, ArrowRight, FileSignature, FileText } from '@/components/ui/icones'
 import { Carregando, EstadoErro } from '@/components/comuns/Estados'
 import { StatusContratoBadge } from '@/components/comuns/StatusBadges'
 import { StatusMatriculaBadge } from '@/components/comuns/StatusMatriculaBadge'

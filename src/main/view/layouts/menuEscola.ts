@@ -1,46 +1,52 @@
 import {
-  CalendarCog,
   Backpack,
   BookOpen,
   Briefcase,
-  ClipboardList,
-  FileWarning,
+  CalendarDots,
+  Chalkboard,
+  ClipboardText,
   FileText,
-  GraduationCap,
+  FileWarning,
   HandCoins,
-  Inbox,
   Landmark,
-  School,
-  Settings,
-  UserCog,
-  Users,
-  type LucideIcon,
-} from 'lucide-react'
+  ShieldCheck,
+  Student,
+  Tray,
+  UserGear,
+  UsersThree,
+  type TipoIcone,
+} from '@/components/ui/icones'
 import type { Modulo } from '@/models/enums'
+
+export type GrupoMenu = 'Pessoas' | 'Matrícula' | 'Financeiro' | 'Pedagógico' | 'Administração'
 
 export interface ItemMenu {
   rotulo: string
   modulo: Modulo
-  icone: LucideIcon
+  icone: TipoIcone
+  grupo: GrupoMenu
   /** Sem rota = ainda não implementado ("em breve"). */
   rota?: string
 }
 
+/** Ordem das seções no menu lateral. */
+export const GRUPOS_MENU: GrupoMenu[] = ['Pessoas', 'Matrícula', 'Financeiro', 'Pedagógico', 'Administração']
+
 /** Menu da Área da escola. Cada item aparece se o perfil puder LER o módulo. */
 export const MENU_ESCOLA: ItemMenu[] = [
-  { rotulo: 'Alunos', modulo: 'ALUNOS', icone: GraduationCap, rota: '/escola/alunos' },
-  { rotulo: 'Responsáveis', modulo: 'ALUNOS', icone: Users, rota: '/escola/responsaveis' },
-  { rotulo: 'Turmas', modulo: 'TURMAS', icone: School, rota: '/escola/turmas' },
-  { rotulo: 'Funcionários', modulo: 'RH', icone: Briefcase, rota: '/escola/rh/funcionarios' },
-  { rotulo: 'Pré-matrículas', modulo: 'MATRICULA', icone: Inbox, rota: '/escola/pre-matriculas' },
-  { rotulo: 'Matrículas', modulo: 'MATRICULA', icone: ClipboardList, rota: '/escola/matriculas' },
-  { rotulo: 'Pendências', modulo: 'PENDENCIAS', icone: FileWarning, rota: '/escola/pendencias' },
-  { rotulo: 'Listas de materiais', modulo: 'MATRICULA', icone: Backpack, rota: '/escola/config/materiais' },
-  { rotulo: 'Financeiro', modulo: 'FINANCEIRO', icone: Landmark, rota: '/escola/financeiro/cobrancas' },
-  { rotulo: 'Bolsas', modulo: 'BOLSAS', icone: HandCoins, rota: '/escola/financeiro/bolsas' },
-  { rotulo: 'Pedagógico', modulo: 'PEDAGOGICO', icone: BookOpen, rota: '/escola/pedagogico' },
-  { rotulo: 'Obrigações', modulo: 'OBRIGACOES', icone: FileText, rota: '/escola/obrigacoes' },
-  { rotulo: 'Usuários', modulo: 'USUARIOS', icone: UserCog, rota: '/escola/config/usuarios' },
-  { rotulo: 'Ano letivo e preços', modulo: 'CONFIGURACOES', icone: CalendarCog, rota: '/escola/config/ano-letivo' },
-  { rotulo: 'Perfis de acesso', modulo: 'CONFIGURACOES', icone: Settings, rota: '/escola/config/perfis' },
+  { rotulo: 'Alunos', modulo: 'ALUNOS', icone: Student, grupo: 'Pessoas', rota: '/escola/alunos' },
+  { rotulo: 'Responsáveis', modulo: 'ALUNOS', icone: UsersThree, grupo: 'Pessoas', rota: '/escola/responsaveis' },
+  { rotulo: 'Funcionários', modulo: 'RH', icone: Briefcase, grupo: 'Pessoas', rota: '/escola/rh/funcionarios' },
+  { rotulo: 'Pré-matrículas', modulo: 'MATRICULA', icone: Tray, grupo: 'Matrícula', rota: '/escola/pre-matriculas' },
+  { rotulo: 'Matrículas', modulo: 'MATRICULA', icone: ClipboardText, grupo: 'Matrícula', rota: '/escola/matriculas' },
+  { rotulo: 'Pendências', modulo: 'PENDENCIAS', icone: FileWarning, grupo: 'Matrícula', rota: '/escola/pendencias' },
+  { rotulo: 'Listas de materiais', modulo: 'MATRICULA', icone: Backpack, grupo: 'Matrícula', rota: '/escola/config/materiais' },
+  { rotulo: 'Financeiro', modulo: 'FINANCEIRO', icone: Landmark, grupo: 'Financeiro', rota: '/escola/financeiro/cobrancas' },
+  { rotulo: 'Bolsas', modulo: 'BOLSAS', icone: HandCoins, grupo: 'Financeiro', rota: '/escola/financeiro/bolsas' },
+  { rotulo: 'Turmas', modulo: 'TURMAS', icone: Chalkboard, grupo: 'Pedagógico', rota: '/escola/turmas' },
+  { rotulo: 'Pedagógico', modulo: 'PEDAGOGICO', icone: BookOpen, grupo: 'Pedagógico', rota: '/escola/pedagogico' },
+  { rotulo: 'Obrigações', modulo: 'OBRIGACOES', icone: FileText, grupo: 'Administração', rota: '/escola/obrigacoes' },
+  { rotulo: 'Usuários', modulo: 'USUARIOS', icone: UserGear, grupo: 'Administração', rota: '/escola/config/usuarios' },
+  { rotulo: 'Ano letivo e preços', modulo: 'CONFIGURACOES', icone: CalendarDots, grupo: 'Administração', rota: '/escola/config/ano-letivo' },
+  { rotulo: 'Perfis de acesso', modulo: 'CONFIGURACOES', icone: ShieldCheck, grupo: 'Administração', rota: '/escola/config/perfis' },
 ]

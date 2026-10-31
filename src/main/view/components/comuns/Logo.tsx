@@ -1,12 +1,14 @@
-import { Sprout } from 'lucide-react'
+import { Sprout } from '@/components/ui/icones'
 
 interface Props {
   claro?: boolean
   /** "grande": logo em destaque, com o nome embaixo (telas públicas). */
   tamanho?: 'normal' | 'grande'
+  /** Classes extras para o nome "Semear" (ex.: esmaecer quando o menu lateral está recolhido). */
+  classeNome?: string
 }
 
-export function Logo({ claro = false, tamanho = 'normal' }: Props) {
+export function Logo({ claro = false, tamanho = 'normal', classeNome = '' }: Props) {
   if (tamanho === 'grande') {
     return (
       <span className="flex flex-col items-center gap-3 text-center">
@@ -25,10 +27,10 @@ export function Logo({ claro = false, tamanho = 'normal' }: Props) {
 
   return (
     <span className={`flex items-center gap-2 font-semibold tracking-tight ${claro ? 'text-white' : 'text-semear-700 dark:text-semear-300'}`}>
-      <span className={`grid size-8 place-items-center rounded-lg ${claro ? 'bg-white/15' : 'bg-semear-600 text-white'}`}>
+      <span className={`grid size-8 shrink-0 place-items-center rounded-lg ${claro ? 'bg-white/15' : 'bg-semear-600 text-white'}`}>
         <Sprout className="size-5" aria-hidden />
       </span>
-      Semear
+      <span className={classeNome}>Semear</span>
     </span>
   )
 }

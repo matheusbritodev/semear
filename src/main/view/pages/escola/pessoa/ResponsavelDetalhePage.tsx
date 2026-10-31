@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useParams } from 'react-router'
-import { Wallet } from 'lucide-react'
+import { Wallet } from '@/components/ui/icones'
 import { Carregando, EstadoErro } from '@/components/comuns/Estados'
 import { PageHeader } from '@/components/comuns/PageHeader'
 import { StatusMatriculaBadge } from '@/components/comuns/StatusMatriculaBadge'

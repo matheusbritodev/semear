@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { Link } from 'react-router'
-import { CheckCircle2, FileText, Pencil, Plus, Trash2, Upload } from 'lucide-react'
+import { CheckCircle2, FileText, Pencil, Plus, Trash2, Upload } from '@/components/ui/icones'
 import { Carregando, EstadoErro, EstadoVazio } from '@/components/comuns/Estados'
 import { PageHeader } from '@/components/comuns/PageHeader'
 import { Badge, type CorBadge } from '@/components/ui/Badge'

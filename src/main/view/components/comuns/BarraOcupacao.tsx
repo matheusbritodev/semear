@@ -12,7 +12,7 @@ export function BarraOcupacao({ ocupadas, capacidade }: { ocupadas: number; capa
         aria-valuenow={ocupadas}
         aria-label={`${ocupadas} de ${capacidade} vagas ocupadas`}
       >
-        <div className={`h-full rounded-full ${cor}`} style={{ width: `${percentual}%` }} />
+        <div className={`h-full rounded-full transition-[width] duration-700 ease-out ${cor}`} style={{ width: `${percentual}%` }} />
       </div>
       <p className="text-xs text-slate-500">
         <strong className="font-semibold text-slate-700">{ocupadas}</strong> de {capacidade} vagas

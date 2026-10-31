@@ -1,8 +1,8 @@
-import { Monitor, Moon, Sun, type LucideIcon } from 'lucide-react'
+import { Monitor, Moon, Sun, type TipoIcone } from '@/components/ui/icones'
 import type { PreferenciaTema } from '@/tema/TemaContext'
 import { useTema } from '@/tema/useTema'
 
-const OPCOES: { valor: PreferenciaTema; rotulo: string; icone: LucideIcon }[] = [
+const OPCOES: { valor: PreferenciaTema; rotulo: string; icone: TipoIcone }[] = [
   { valor: 'claro', rotulo: 'Tema claro', icone: Sun },
   { valor: 'escuro', rotulo: 'Tema escuro', icone: Moon },
   { valor: 'sistema', rotulo: 'Seguir o tema do sistema', icone: Monitor },

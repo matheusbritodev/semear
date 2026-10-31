@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Trash2 } from 'lucide-react'
+import { Trash2 } from '@/components/ui/icones'
 import { Carregando, EstadoErro } from '@/components/comuns/Estados'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'

@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Check, Copy, Pencil, Plus, Trash2, X } from 'lucide-react'
+import { Check, Copy, Pencil, Plus, Trash2, X } from '@/components/ui/icones'
 import { Carregando, EstadoErro } from '@/components/comuns/Estados'
 import { PageHeader } from '@/components/comuns/PageHeader'
 import { SeletorAno } from '@/components/comuns/SeletorAno'

@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react'
 import {
-  Apple,
+  Exam,
   Backpack,
   BookOpen,
   Calculator,
@@ -12,11 +12,11 @@ import {
   Ruler,
   Shapes,
   Star,
-  type LucideIcon,
-} from 'lucide-react'
+  type TipoIcone,
+} from '@/components/ui/icones'
 
 interface ItemFlutuante {
-  icone: LucideIcon
+  icone: TipoIcone
   /** Posição e tamanho em classes do Tailwind. */
   classe: string
   /** Inclinação de repouso e atraso da animação, para os itens não flutuarem juntos. */
@@ -35,7 +35,7 @@ const ITENS: ItemFlutuante[] = [
   { icone: Shapes, classe: 'bottom-[30%] left-[30%] size-10', giro: -10, atraso: 2.4 },
   { icone: Star, classe: 'bottom-[32%] right-[28%] size-9', giro: 14, atraso: 0.9 },
   { icone: Backpack, classe: 'bottom-[31%] left-[12%] size-10', giro: 6, atraso: 1.5 },
-  { icone: Apple, classe: 'bottom-[30%] right-[12%] size-9', giro: -4, atraso: 3.6 },
+  { icone: Exam, classe: 'bottom-[30%] right-[12%] size-9', giro: -4, atraso: 3.6 },
 ]
 
 const MODULOS = ['Matrículas', 'Financeiro', 'Pedagógico', 'Portal da família']
@@ -53,7 +53,7 @@ export function PainelEscola() {
           className={`absolute grid place-items-center rounded-2xl bg-white/10 text-white/85 shadow-lg shadow-semear-950/20 ring-1 ring-white/20 backdrop-blur-sm motion-safe:animate-flutuar ${classe}`}
           style={{ '--giro': `${giro}deg`, transform: `rotate(${giro}deg)`, animationDelay: `${atraso}s` } as CSSProperties}
         >
-          <Icone className="size-1/2" strokeWidth={1.75} />
+          <Icone className="size-1/2" />
         </span>
       ))}
 

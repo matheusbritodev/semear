@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { CheckCheck } from 'lucide-react'
+import { CheckCheck } from '@/components/ui/icones'
 import { Carregando, EstadoErro } from '@/components/comuns/Estados'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'

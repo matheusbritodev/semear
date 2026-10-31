@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Pencil, Plus, Trash2 } from 'lucide-react'
+import { Pencil, Plus, Trash2 } from '@/components/ui/icones'
 import { Carregando, EstadoErro, EstadoVazio } from '@/components/comuns/Estados'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'

@@ -1,5 +1,5 @@
 import { useState, type ComponentProps } from 'react'
-import { LockKeyhole } from 'lucide-react'
+import { LockKeyhole } from '@/components/ui/icones'
 import { Input } from './Input'
 
 type Props = Omit<ComponentProps<typeof Input>, 'type' | 'acessorio'>

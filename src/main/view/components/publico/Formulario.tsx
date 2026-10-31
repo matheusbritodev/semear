@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react'
-import { AlertCircle } from 'lucide-react'
+import { AlertCircle } from '@/components/ui/icones'
 
 /** Atraso em cascata para os itens do formulário surgirem um após o outro. */
 export const emCascata = (ordem: number): CSSProperties => ({ animationDelay: `${150 + ordem * 70}ms` })

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { Printer } from 'lucide-react'
+import { Printer } from '@/components/ui/icones'
 import { Logo } from '@/components/comuns/Logo'
 import { StatusContratoBadge } from '@/components/comuns/StatusBadges'
 import { Button } from '@/components/ui/Button'

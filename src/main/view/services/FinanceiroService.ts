@@ -1,7 +1,9 @@
 import type { HttpClient } from '@/lib/HttpClient'
+import type { Solicitacao } from '@/models/controle'
 import type { Pagina } from '@/models/comum'
 import type { StatusCobranca, TipoCobranca } from '@/models/enums'
 import type {
+  AlteracaoBolsa,
   Bolsa,
   Cobranca,
   CobrancaDetalhe,
@@ -69,8 +71,9 @@ export class FinanceiroService {
     return this.http.post<Bolsa>('/bolsas', dados)
   }
 
-  alterarBolsa(id: string, dados: DadosBolsa): Promise<Bolsa> {
-    return this.http.put<Bolsa>(`/bolsas/${id}`, dados)
+  /** Mudar o desconto ou reativar volta com "solicitacao" (precisa da aprovação de outra pessoa). */
+  alterarBolsa(id: string, dados: DadosBolsa): Promise<AlteracaoBolsa> {
+    return this.http.put<AlteracaoBolsa>(`/bolsas/${id}`, dados)
   }
 
   bolsistas(ano?: number): Promise<Concessao[]> {
@@ -81,8 +84,9 @@ export class FinanceiroService {
     return this.http.get<Concessao[]>(`/matriculas/${matriculaId}/bolsas`)
   }
 
-  conceder(matriculaId: string, bolsaId: string): Promise<Concessao[]> {
-    return this.http.post<Concessao[]>(`/matriculas/${matriculaId}/bolsas`, { bolsaId })
+  /** Pede a bolsa: só vale depois que outra pessoa aprovar. */
+  conceder(matriculaId: string, bolsaId: string): Promise<Solicitacao> {
+    return this.http.post<Solicitacao>(`/matriculas/${matriculaId}/bolsas`, { bolsaId })
   }
 
   revogar(matriculaId: string, concessaoId: string): Promise<Concessao[]> {

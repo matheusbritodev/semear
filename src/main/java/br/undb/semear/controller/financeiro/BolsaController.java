@@ -16,11 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.undb.semear.dto.controle.ControleDtos.SolicitacaoResponse;
+import br.undb.semear.dto.financeiro.FinanceiroDtos.AlteracaoBolsaResponse;
 import br.undb.semear.dto.financeiro.FinanceiroDtos.BolsaRequest;
 import br.undb.semear.dto.financeiro.FinanceiroDtos.BolsaResponse;
 import br.undb.semear.dto.financeiro.FinanceiroDtos.ConcederBolsaRequest;
 import br.undb.semear.dto.financeiro.FinanceiroDtos.ConcessaoResponse;
-import br.undb.semear.security.EscopoAcesso;
 import br.undb.semear.service.financeiro.BolsaService;
 import jakarta.validation.Valid;
 
@@ -30,11 +31,9 @@ import jakarta.validation.Valid;
 public class BolsaController {
 
     private final BolsaService bolsas;
-    private final EscopoAcesso escopo;
 
-    public BolsaController(BolsaService bolsas, EscopoAcesso escopo) {
+    public BolsaController(BolsaService bolsas) {
         this.bolsas = bolsas;
-        this.escopo = escopo;
     }
 
     @GetMapping("/bolsas")
@@ -50,9 +49,10 @@ public class BolsaController {
         return bolsas.criar(pedido);
     }
 
+    /** Mudança de desconto ou reativação volta com "solicitacao": precisa da aprovação de outra pessoa. */
     @PutMapping("/bolsas/{id}")
     @PreAuthorize("@permissoes.pode('BOLSAS', 'GRAVAR')")
-    public BolsaResponse alterar(@PathVariable UUID id, @Valid @RequestBody BolsaRequest pedido) {
+    public AlteracaoBolsaResponse alterar(@PathVariable UUID id, @Valid @RequestBody BolsaRequest pedido) {
         return bolsas.alterar(id, pedido);
     }
 
@@ -68,10 +68,12 @@ public class BolsaController {
         return bolsas.daMatricula(id);
     }
 
+    /** Pede a bolsa: só vale depois que outra pessoa aprovar (202 + pedido). */
     @PostMapping("/matriculas/{id}/bolsas")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     @PreAuthorize("@permissoes.pode('BOLSAS', 'GRAVAR')")
-    public List<ConcessaoResponse> conceder(@PathVariable UUID id, @Valid @RequestBody ConcederBolsaRequest pedido) {
-        return bolsas.conceder(id, pedido.bolsaId(), pedido.vigenciaInicio(), escopo.funcionarioOpcional().orElse(null));
+    public SolicitacaoResponse conceder(@PathVariable UUID id, @Valid @RequestBody ConcederBolsaRequest pedido) {
+        return bolsas.solicitarConcessao(id, pedido.bolsaId(), pedido.vigenciaInicio());
     }
 
     @DeleteMapping("/matriculas/{id}/bolsas/{concessaoId}")

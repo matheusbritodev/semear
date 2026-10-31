@@ -103,6 +103,11 @@ public final class FinanceiroDtos {
                                     String turma, LocalDate vigenciaInicio, LocalDate vigenciaFim, boolean vigente) {
     }
 
+    /** Alteração de bolsa: aplicada (solicitacao nula) ou enviada para aprovação (bolsa ainda como estava). */
+    public record AlteracaoBolsaResponse(BolsaResponse bolsa,
+                                         br.undb.semear.dto.controle.ControleDtos.SolicitacaoResponse solicitacao) {
+    }
+
     public record ConcederBolsaRequest(@NotNull UUID bolsaId, LocalDate vigenciaInicio) {
     }
 }

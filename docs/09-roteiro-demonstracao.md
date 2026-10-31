@@ -13,7 +13,7 @@ SEMEAR_JOBS_ATIVOS=false java -jar target/semear-0.1.0-SNAPSHOT.jar   # tudo em 
 Com `SEMEAR_JOBS_ATIVOS=false` o sistema não gera boletos nem avisos sozinho durante a apresentação.
 Confira `http://localhost:8080/api/saude`: deve mostrar `"banco":"OK"` e `"fusoBanco":"America/Fortaleza"`.
 
-**Preparado para a demonstração:** o Contrato de Matrícula 2027 de **Heitor Martins Cardoso** (filho da conta responsável) está **pendente**, para ser assinado ao vivo.
+**Preparado para a demonstração:** um pedido de bolsa do Financeiro (Rafael Diniz Pinheiro, 2027) aguardando aprovação, e o Contrato de Matrícula 2027 de **Heitor Martins Cardoso** (filho da conta responsável) está **pendente**, para ser assinado ao vivo.
 
 ## 1. Responsável (portal) — 4 min
 
@@ -35,7 +35,8 @@ Confira `http://localhost:8080/api/saude`: deve mostrar `"banco":"OK"` e `"fusoB
 1. Entrar como `financeiro.semear@example.com`. **Cobranças** abre no mês atual. Abrir uma vencida → multa de 2% e juros de 0,033% ao dia, e **simular** o valor em outra data.
 2. **Inadimplência**: 36 alunos, maior atraso primeiro; quem está aqui não consegue rematricular (RN13).
 3. **Resumo mensal**: previsto × recebido × em atraso.
-4. **Bolsas** → abrir a matrícula de um aluno → conceder uma bolsa e ver a cobrança em aberto ser recalculada.
+4. **Aprovações**: o pedido de bolsa do Rafael aparece como "aguardando outra pessoa". Mostrar que o Financeiro não consegue aprová-lo (segregação de funções).
+5. **Conflito de interesse**: abrir a matrícula de **Ágatha Nascimento Viana** (a funcionária é tia dela) → pedir bolsa → o sistema recusa. O mesmo vale para dar baixa numa cobrança dela.
 
 ## 4. Professora — 2 min
 
@@ -46,12 +47,17 @@ Confira `http://localhost:8080/api/saude`: deve mostrar `"banco":"OK"` e `"fusoB
 
 ## 5. Gestão — 2 min
 
-1. Entrar com a conta de administração → **Perfis de acesso**: desligar "Pendências" da Secretaria e mostrar que o menu dela muda; depois **Restaurar padrão**.
-2. **Calendário letivo**: feriados e recessos que bloqueiam a chamada.
+1. Entrar com a conta de administração → o início mostra **1 pedido aguardando aprovação** → **Aprovações** → aprovar a bolsa do Rafael (as cobranças em aberto são recalculadas).
+2. **Ano letivo e preços** → editar um preço: vira pedido; o gestor não consegue aprovar o próprio pedido (o Financeiro aprova).
+3. **Perfis de acesso**: tentar dar "Alterar" no Financeiro para a Secretaria → recusado (SOD-04). Mostrar o painel de funções incompatíveis. Desligar "Pendências" da Secretaria e **Restaurar padrão**.
+4. **Auditoria**: a aprovação de agora aparece com autor, antes e depois → **Verificar integridade** (cadeia de hashes).
+5. **Revisão de acessos**: alertas por conta → **Registrar revisão**.
+6. **Calendário letivo**: feriados e recessos que bloqueiam a chamada.
 
 ## Pontos para comentar (POO)
 
 - `Cobranca` com três subclasses e o cálculo em **Template Method**; multa e juros como **Strategy** (`RegraEncargos`); a matrícula usa um **Null Object** (`SemEncargos`).
 - `Contrato` → `ContratoMatricula` / `FichaSocio`: mesmo roteiro de cláusulas, valores diferentes por nível.
 - `Turma.garantirVaga` (RN04) e `Rematricula.avaliar` (RN13): a regra mora no objeto, não na tela.
-- Detalhes em [08-entrega.md](08-entrega.md).
+- `SolicitacaoAprovacao` (Template Method) com quatro subclasses e despacho duplo (`EfeitosAprovacao`); `CadeiaAuditoria` recalcula o hash de cada registro.
+- Detalhes em [08-entrega.md](08-entrega.md) e [10-controles-internos.md](10-controles-internos.md).

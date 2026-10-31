@@ -16,6 +16,8 @@ export type Modulo =
   | 'OBRIGACOES'
   | 'PORTAL'
   | 'PENDENCIAS'
+  | 'APROVACOES'
+  | 'AUDITORIA'
 
 export type Acao = 'LER' | 'GRAVAR'
 
@@ -42,6 +44,8 @@ export const ROTULO_MODULO: Record<Modulo, string> = {
   OBRIGACOES: 'Obrigações',
   PORTAL: 'Portal',
   PENDENCIAS: 'Pendências',
+  APROVACOES: 'Aprovações',
+  AUDITORIA: 'Auditoria',
 }
 
 export type StatusMatricula = 'AGUARDANDO_PAGAMENTO' | 'ATIVA' | 'CANCELADA' | 'ENCERRADA'

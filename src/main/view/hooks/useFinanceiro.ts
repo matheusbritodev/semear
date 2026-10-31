@@ -1,5 +1,5 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { DadosBolsa } from '@/models/financeiro'
+import type { AlteracaoBolsa, Bolsa, DadosBolsa } from '@/models/financeiro'
 import { financeiroService, type FiltroCobrancas } from '@/services/FinanceiroService'
 import { portalService } from '@/services/PortalService'
 
@@ -71,10 +71,14 @@ export function useBolsas(habilitado = true) {
 
 export function useSalvarBolsa() {
   const invalidar = useInvalidarFinanceiro()
+  const cliente = useQueryClient()
   return useMutation({
-    mutationFn: ({ id, dados }: { id?: string; dados: DadosBolsa }) =>
+    mutationFn: ({ id, dados }: { id?: string; dados: DadosBolsa }): Promise<Bolsa | AlteracaoBolsa> =>
       id ? financeiroService.alterarBolsa(id, dados) : financeiroService.criarBolsa(dados),
-    onSuccess: invalidar,
+    onSuccess: () => {
+      invalidar()
+      void cliente.invalidateQueries({ queryKey: ['aprovacoes'] })
+    },
   })
 }
 
@@ -94,9 +98,13 @@ export function useBolsasDaMatricula(matriculaId: string, habilitado = true) {
   })
 }
 
+/** Pedir bolsa cria um pedido de aprovação (nada muda nas cobranças até alguém aprovar). */
 export function useConcederBolsa(matriculaId: string) {
-  const invalidar = useInvalidarFinanceiro()
-  return useMutation({ mutationFn: (bolsaId: string) => financeiroService.conceder(matriculaId, bolsaId), onSuccess: invalidar })
+  const cliente = useQueryClient()
+  return useMutation({
+    mutationFn: (bolsaId: string) => financeiroService.conceder(matriculaId, bolsaId),
+    onSuccess: () => void cliente.invalidateQueries({ queryKey: ['aprovacoes'] }),
+  })
 }
 
 export function useRevogarBolsa(matriculaId: string) {

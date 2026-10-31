@@ -28,6 +28,26 @@ public class UsuarioJdbcRepository extends JdbcRepository<Usuario> implements Us
         super(jdbc, tradutor, "usuario");
     }
 
+    /**
+     * Permissões do perfil na mesma consulta do usuário ("MODULO:ler:gravar,..."). Antes eram buscadas dentro
+     * do mapeamento da linha, o que segurava duas conexões ao mesmo tempo e esgotava o pool com várias telas
+     * carregando juntas.
+     */
+    private static final String COLUNA_PERMISSOES = """
+            (SELECT string_agg(p.modulo || ':' || p.pode_ler || ':' || p.pode_gravar, ',')
+               FROM perfil_permissao p WHERE p.perfil = u.perfil) AS permissoes_texto
+            """;
+
+    @Override
+    protected String selectBase() {
+        return "SELECT u.*, " + COLUNA_PERMISSOES + " FROM usuario u";
+    }
+
+    @Override
+    protected String colunaId() {
+        return "u.id";
+    }
+
     @Override
     protected Usuario mapear(ResultSet linha, int numeroLinha) throws SQLException {
         PerfilUsuario perfil = PerfilUsuario.valueOf(linha.getString("perfil"));
@@ -37,7 +57,25 @@ public class UsuarioJdbcRepository extends JdbcRepository<Usuario> implements Us
                 perfil,
                 linha.getBoolean("ativo"),
                 linha.getObject("ultimo_login", OffsetDateTime.class),
-                listarPermissoes(perfil));
+                permissoes(linha.getString("permissoes_texto")));
+    }
+
+    /** "MATRICULA:true:false,ALUNOS:true:true" -> permissões. Módulo desconhecido no banco é ignorado. */
+    static List<Permissao> permissoes(String texto) {
+        if (texto == null || texto.isBlank()) {
+            return List.of();
+        }
+        List<Permissao> lista = new java.util.ArrayList<>();
+        for (String item : texto.split(",")) {
+            String[] partes = item.split(":");
+            try {
+                lista.add(new Permissao(Modulo.valueOf(partes[0]), Boolean.parseBoolean(partes[1]),
+                        Boolean.parseBoolean(partes[2])));
+            } catch (IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
+                // módulo que esta versão da aplicação não conhece
+            }
+        }
+        return List.copyOf(lista);
     }
 
     @Override
@@ -86,8 +124,8 @@ public class UsuarioJdbcRepository extends JdbcRepository<Usuario> implements Us
                 .list());
     }
 
-    private static final String SELECT_CONTA = """
-            SELECT u.*,
+    private static final String SELECT_CONTA = "SELECT u.*, " + COLUNA_PERMISSOES + """
+                   ,
                    COALESCE(f.nome, r.nome, a.nome) AS nome, f.tipo AS tipo_funcionario,
                    CASE WHEN f.id IS NOT NULL THEN 'FUNCIONARIO' WHEN r.id IS NOT NULL THEN 'RESPONSAVEL'
                         WHEN a.id IS NOT NULL THEN 'ALUNO' ELSE 'NENHUM' END AS vinculo

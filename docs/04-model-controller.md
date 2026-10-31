@@ -618,6 +618,17 @@ Convenções: JSON, `camelCase`, datas ISO-8601, dinheiro como string decimal (`
 | GET | `/api/permissoes` ✅ | CONFIGURACOES:L | Matriz perfil × módulo (perfis de acesso) |
 | PUT | `/api/permissoes/{perfil}/{modulo}` ✅ | CONFIGURACOES:G | Corpo `{ler, gravar}`; gravar implica ler; ADMIN mantém Configurações e Usuários (`PERMISSAO_ESSENCIAL`) |
 | POST | `/api/permissoes/restaurar-padrao` ✅ | CONFIGURACOES:G | Volta a matriz para `perfil_permissao_padrao` |
+| GET | `/api/permissoes/segregacao` ✅ | CONFIGURACOES:L ou USUARIOS:L | Matriz de funções incompatíveis (SoD) e conflitos atuais; mudança que fere a matriz devolve `CONFLITO_SOD` |
+| GET | `/api/aprovacoes?status=` ✅ | APROVACOES:L, BOLSAS:G ou CONFIGURACOES:G | Pedidos de dupla aprovação (bolsa, desconto de bolsa, preços) |
+| GET | `/api/aprovacoes/resumo` ✅ | idem | Quantos aguardam |
+| POST | `/api/aprovacoes/{id}/aprovar` ✅ | APROVACOES:G | Aplica o efeito na mesma transação; quem pediu não aprova (`AUTOAPROVACAO`); família do aluno não decide (`CONFLITO_DE_INTERESSE`) |
+| POST | `/api/aprovacoes/{id}/rejeitar` ✅ | APROVACOES:G | Corpo `{motivo}` obrigatório |
+| POST | `/api/aprovacoes/{id}/cancelar` ✅ | BOLSAS:G ou CONFIGURACOES:G | Só o próprio solicitante, enquanto pendente |
+| GET | `/api/auditoria` ✅ | AUDITORIA:L | Trilha com filtros (tabela, usuarioId, registroId, de, ate) e campos alterados |
+| GET | `/api/auditoria/verificacao` ✅ | AUDITORIA:L | Recalcula a cadeia de hashes e confere as âncoras das revisões |
+| GET | `/api/auditoria/autores`, `/api/auditoria/tabelas` ✅ | AUDITORIA:L | Opções dos filtros |
+| GET | `/api/revisao-acessos` ✅ | USUARIOS:L | Contas da equipe com alertas, conflitos de SoD, próxima revisão e histórico |
+| POST | `/api/revisao-acessos` ✅ | USUARIOS:G | Registra a revisão (foto das contas + âncora da trilha) |
 
 ### 10.2 Pessoas
 
@@ -657,8 +668,8 @@ Convenções: JSON, `camelCase`, datas ISO-8601, dinheiro como string decimal (`
 | GET | `/api/turmas/opcoes-professores` ✅ | TURMAS:G | Professores ativos e disciplinas |
 | POST · DELETE | `/api/turmas/{id}/professores[/{vinculoId}]` ✅ | TURMAS:G | Regente (sem disciplina, um por turma) ou especialista (um por disciplina) |
 | POST · PUT | `/api/anos-letivos[/{ano}]` ✅ | CONFIGURACOES:G | Abrir ano / ajustar datas (dentro do próprio ano) |
-| GET · PUT | `/api/tabela-precos[?ano=]` ✅ | CONFIGURACOES:L (ou FINANCEIRO:L) / CONFIGURACOES:G | Preço por série: matrícula, mensal, vencimento (1–28), prazo |
-| POST | `/api/tabela-precos/copiar` ✅ | CONFIGURACOES:G | `{ deAno, paraAno, reajustePercentual }` — só séries sem preço |
+| GET · PUT | `/api/tabela-precos[?ano=]` ✅ | CONFIGURACOES:L (ou FINANCEIRO:L) / CONFIGURACOES:G | Preço por série: matrícula, mensal, vencimento (1–28), prazo. PUT cria pedido de aprovação (202) |
+| POST | `/api/tabela-precos/copiar` ✅ | CONFIGURACOES:G | `{ deAno, paraAno, reajustePercentual }` — só séries sem preço; cria pedido de aprovação (202) |
 | GET/POST/DELETE | `/api/turmas/{id}/professores` | TURMAS:L/G | Vínculo professor/disciplina |
 | GET/PUT | `/api/tabela-precos` | FINANCEIRO:L / CONFIGURACOES:G | Preços por série/ano |
 | GET/PUT | `/api/listas-materiais/{serieId}/{ano}` | TURMAS:L/G | Lista de materiais |
@@ -695,9 +706,9 @@ Convenções: JSON, `camelCase`, datas ISO-8601, dinheiro como string decimal (`
 | POST | `/api/cobrancas/{id}/pagamento` ✅ | FINANCEIRO:G | Baixa **presencial** pelo valor do dia (calculado pelo Model) → `fn_registrar_pagamento` |
 | GET | `/api/financeiro/inadimplencia` ✅ | FINANCEIRO:L | Por aluno: cobranças vencidas, maior atraso, valor original e atualizado |
 | GET | `/api/financeiro/resumo?ano=` ✅ | FINANCEIRO:L | `vw_resumo_financeiro_mensal` somada por mês + total do ano |
-| GET/POST/PUT | `/api/bolsas[/{id}]` ✅ | BOLSAS:L/G | Tipos de bolsa (com bolsistas vigentes) |
+| GET/POST/PUT | `/api/bolsas[/{id}]` ✅ | BOLSAS:L/G | Tipos de bolsa (com bolsistas vigentes). PUT que muda tipo/valor ou reativa devolve `solicitacao` (vai para aprovação) |
 | GET | `/api/bolsas/bolsistas?ano=` ✅ | BOLSAS:L | Concessões do ano |
-| GET/POST | `/api/matriculas/{id}/bolsas` ✅ | BOLSAS:L/G | Conceder `{ bolsaId }` até o fim do ano letivo; o trigger recalcula as cobranças em aberto |
+| GET/POST | `/api/matriculas/{id}/bolsas` ✅ | BOLSAS:L/G | POST `{ bolsaId }` cria pedido de aprovação (202); aprovado, vale até o fim do ano letivo e o trigger recalcula as cobranças em aberto |
 | DELETE | `/api/matriculas/{id}/bolsas/{concessaoId}` ✅ | BOLSAS:G | Revoga a partir de hoje (apaga se ainda não começou) |
 | POST | `/api/webhooks/cora` ✅ | assinatura HMAC | `{"evento":"boleto.pago","id":"cora_..."}` com `X-Cora-Assinatura` = HMAC-SHA256 hex do corpo; reentrega = 200 `JA_ESTAVA_PAGA` |
 

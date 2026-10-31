@@ -16,6 +16,7 @@ import { useBolsas, useBolsistas, useSalvarBolsa } from '@/hooks/useFinanceiro'
 import { usePermissao } from '@/hooks/useUtilitarios'
 import { ApiError } from '@/lib/ApiError'
 import { formatarData } from '@/lib/formatters'
+import type { Solicitacao } from '@/models/controle'
 import { ROTULO_TIPO_DESCONTO, descreverDesconto, type Bolsa, type TipoDesconto } from '@/models/financeiro'
 
 /** Bolsas (RF02/RN11). A concessão é feita na matrícula do aluno; aqui ficam os tipos e a lista de bolsistas. */
@@ -129,6 +130,7 @@ function BolsaModal({ bolsa, aoFechar }: { bolsa: Bolsa | null; aoFechar: () => 
   const [tipo, setTipo] = useState<TipoDesconto>(bolsa?.tipoDesconto ?? 'PERCENTUAL')
   const [valor, setValor] = useState(bolsa ? String(bolsa.valor) : '')
   const [ativa, setAtiva] = useState(bolsa?.ativa ?? true)
+  const [pedido, setPedido] = useState<Solicitacao | null>(null)
 
   const numero = Number(valor.replace(',', '.'))
   const erroValor =
@@ -136,7 +138,11 @@ function BolsaModal({ bolsa, aoFechar }: { bolsa: Bolsa | null; aoFechar: () => 
   const valido = nome.trim() !== '' && valor !== '' && !erroValor
 
   async function enviar() {
-    await salvar.mutateAsync({ id: bolsa?.id, dados: { nome, descricao, tipoDesconto: tipo, valor: numero, ativa } })
+    const resposta = await salvar.mutateAsync({ id: bolsa?.id, dados: { nome, descricao, tipoDesconto: tipo, valor: numero, ativa } })
+    if ('solicitacao' in resposta && resposta.solicitacao) {
+      setPedido(resposta.solicitacao)
+      return
+    }
     aoFechar()
   }
 
@@ -150,9 +156,13 @@ function BolsaModal({ bolsa, aoFechar }: { bolsa: Bolsa | null; aoFechar: () => 
           <Button variante="secundario" onClick={aoFechar}>
             Cancelar
           </Button>
-          <Button disabled={!valido} carregando={salvar.isPending} onClick={() => void enviar().catch(() => undefined)}>
-            Salvar
-          </Button>
+          {pedido ? (
+            <Button onClick={aoFechar}>Fechar</Button>
+          ) : (
+            <Button disabled={!valido} carregando={salvar.isPending} onClick={() => void enviar().catch(() => undefined)}>
+              Salvar
+            </Button>
+          )}
         </>
       }
     >
@@ -181,7 +191,13 @@ function BolsaModal({ bolsa, aoFechar }: { bolsa: Bolsa | null; aoFechar: () => 
         </label>
         {bolsa && (
           <p className="text-xs text-slate-500">
-            Mudar o valor ou desativar recalcula na hora as cobranças em aberto dos {bolsa.bolsistasVigentes} bolsistas. As já pagas não mudam.
+            Nome, descrição e desativar valem na hora. Mudar o tipo ou o valor do desconto, ou reativar, afeta os {bolsa.bolsistasVigentes}{' '}
+            bolsistas: vai para aprovação de outra pessoa. As cobranças já pagas não mudam.
+          </p>
+        )}
+        {pedido && (
+          <p role="status" className="rounded-lg bg-semear-50 px-3 py-2 text-sm text-semear-800">
+            Enviado para aprovação: {pedido.resumo}. O desconto muda quando outra pessoa aprovar em Aprovações.
           </p>
         )}
         {salvar.isError && (

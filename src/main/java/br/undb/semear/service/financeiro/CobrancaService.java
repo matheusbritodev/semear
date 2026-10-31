@@ -49,6 +49,7 @@ import br.undb.semear.repository.financeiro.CobrancaRepository.Filtro;
 import br.undb.semear.repository.financeiro.CobrancaRepository.ResumoMensal;
 import br.undb.semear.security.EscopoAcesso;
 import br.undb.semear.service.academico.AnoLetivoService;
+import br.undb.semear.service.controle.PedidosAprovacao;
 
 /**
  * Cobranças (RF04/RF05). O banco cria as cobranças e aplica a bolsa; este serviço monta as
@@ -65,14 +66,16 @@ public class CobrancaService {
     private final CoraGateway cora;
     private final Clock relogio;
     private final EscopoAcesso escopo;
+    private final PedidosAprovacao controle;
 
     public CobrancaService(CobrancaRepository cobrancas, AnoLetivoService anosLetivos, CoraGateway cora, Clock relogio,
-                           EscopoAcesso escopo) {
+                           EscopoAcesso escopo, PedidosAprovacao controle) {
         this.cobrancas = cobrancas;
         this.anosLetivos = anosLetivos;
         this.cora = cora;
         this.relogio = relogio;
         this.escopo = escopo;
+        this.controle = controle;
     }
 
     /* ---- Consulta ---- */
@@ -108,6 +111,8 @@ public class CobrancaService {
         if (origem != OrigemPagamento.PRESENCIAL) {
             throw new RegraNegocioException("ORIGEM_INVALIDA", "Pagamento pelo site é confirmado pelo banco Cora, não pela escola");
         }
+        // Conflito de interesse: funcionário que é responsável pelo aluno não dá baixa na cobrança da própria família.
+        controle.exigirSemConflitoNaCobranca(id, "a baixa desta cobrança");
         pagarPeloValorDoDia(id, origem);
         return detalhar(id, null);
     }

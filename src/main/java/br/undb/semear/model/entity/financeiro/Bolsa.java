@@ -49,6 +49,14 @@ public class Bolsa extends Entidade {
         this.ativa = ativa;
     }
 
+    /**
+     * Mudar o tipo ou o valor do desconto, ou reativar a bolsa, afeta o que todos os bolsistas pagam:
+     * precisa de aprovação de outra pessoa (SoD). Nome e descrição mudam direto.
+     */
+    public boolean alteracaoExigeAprovacao(TipoDesconto novoTipo, BigDecimal novoValor, boolean novaAtiva) {
+        return novoTipo != tipoDesconto || novoValor.compareTo(valor) != 0 || (novaAtiva && !ativa);
+    }
+
     public Dinheiro calcularDesconto(Dinheiro valorBruto) {
         return ativa ? tipoDesconto.aplicar(valorBruto, valor) : Dinheiro.ZERO;
     }

@@ -12,7 +12,9 @@ import { Input } from '@/components/ui/Input'
 import { Modal } from '@/components/ui/Modal'
 import { Select } from '@/components/ui/Select'
 import { useAnoCorrente, useAnosLetivos, useTurmas } from '@/hooks/useAcademico'
+import { CartaoSolicitacao } from '@/components/controle/CartaoSolicitacao'
 import { useEditarAnoLetivo, useEditarPrecos, useEditarTurmas, usePrecos } from '@/hooks/useConfiguracao'
+import { useAprovacoes } from '@/hooks/useControle'
 import { useSeries } from '@/hooks/useFormalizacao'
 import { usePermissao } from '@/hooks/useUtilitarios'
 import { ApiError } from '@/lib/ApiError'
@@ -105,6 +107,10 @@ function Periodo({ ano, podeEditar }: { ano: AnoLetivo; podeEditar: boolean }) {
 function Precos({ ano, podeEditar }: { ano: number; podeEditar: boolean }) {
   const precos = usePrecos(ano)
   const { copiar } = useEditarPrecos(ano)
+  const pedidos = useAprovacoes('PENDENTE', podeEditar)
+  const pendentes = (pedidos.data ?? []).filter(
+    (p) => (p.tipo === 'ALTERACAO_PRECO' || p.tipo === 'COPIA_PRECOS') && p.resumo.includes(String(ano)),
+  )
   const [editando, setEditando] = useState<PrecoSerie | null>(null)
   const [reajuste, setReajuste] = useState('5')
   const faltando = (precos.data ?? []).filter((p) => p.valorMensal === null).length
@@ -140,6 +146,16 @@ function Precos({ ano, podeEditar }: { ano: number; podeEditar: boolean }) {
               {mensagem(copiar.error, 'Não foi possível copiar.')}
             </p>
           )}
+          {pendentes.length > 0 && (
+            <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50/60 px-3">
+              <p className="pt-2 text-xs font-semibold tracking-wide text-amber-800 uppercase">Aguardando aprovação</p>
+              <ul className="divide-y divide-amber-100">
+                {pendentes.map((p) => (
+                  <CartaoSolicitacao key={p.id} s={p} compacto />
+                ))}
+              </ul>
+            </div>
+          )}
           <ul className="divide-y divide-slate-100">
             {precos.data.map((p) => (
               <li key={p.serieId} className="flex flex-wrap items-center justify-between gap-2 py-2.5 text-sm">
@@ -162,7 +178,8 @@ function Precos({ ano, podeEditar }: { ano: number; podeEditar: boolean }) {
             ))}
           </ul>
           <p className="mt-2 text-xs text-slate-500">
-            Mudar o preço não altera cobranças já geradas nem contratos já assinados (o texto assinado fica guardado).
+            Toda mudança de preço vai para aprovação de outra pessoa (quem pede não aprova). Depois de aprovada, não altera cobranças já
+            geradas nem contratos já assinados (o texto assinado fica guardado).
           </p>
         </>
       )}
@@ -206,7 +223,7 @@ function PrecoModal({ ano, preco, aoFechar }: { ano: number; preco: PrecoSerie; 
               )
             }
           >
-            Salvar
+            Enviar para aprovação
           </Button>
         </>
       }

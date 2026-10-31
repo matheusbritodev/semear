@@ -1,4 +1,5 @@
 import type { HttpClient } from '@/lib/HttpClient'
+import type { Solicitacao } from '@/models/controle'
 import type { AnoLetivo, ProfessorDaTurma, Turma } from '@/models/academico'
 import type { Conta, FuncionarioSemLogin, Opcao, PrecoSerie, SenhaTemporaria } from '@/models/configuracao'
 import type { PerfilUsuario } from '@/models/enums'
@@ -59,12 +60,13 @@ export class ConfiguracaoService {
     valorMensal: number
     diaVencimento: number
     diasPrazoMatricula: number
-  }): Promise<PrecoSerie[]> {
-    return this.http.put<PrecoSerie[]>('/tabela-precos', dados)
+  }): Promise<Solicitacao> {
+    return this.http.put<Solicitacao>('/tabela-precos', dados)
   }
 
-  copiarPrecos(deAno: number, paraAno: number, reajustePercentual: number): Promise<PrecoSerie[]> {
-    return this.http.post<PrecoSerie[]>('/tabela-precos/copiar', { deAno, paraAno, reajustePercentual })
+  /** Preços mudam só depois da aprovação de outra pessoa: as duas operações devolvem o pedido criado. */
+  copiarPrecos(deAno: number, paraAno: number, reajustePercentual: number): Promise<Solicitacao> {
+    return this.http.post<Solicitacao>('/tabela-precos/copiar', { deAno, paraAno, reajustePercentual })
   }
 
   /* ---- Turmas e professores ---- */

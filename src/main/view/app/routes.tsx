@@ -9,6 +9,9 @@ import { MateriaisPage } from '@/pages/escola/config/MateriaisPage'
 import { PerfisAcessoPage } from '@/pages/escola/config/PerfisAcessoPage'
 import { AnoLetivoPage } from '@/pages/escola/config/AnoLetivoPage'
 import { UsuariosPage } from '@/pages/escola/config/UsuariosPage'
+import { AprovacoesPage } from '@/pages/escola/controle/AprovacoesPage'
+import { AuditoriaPage } from '@/pages/escola/controle/AuditoriaPage'
+import { RevisaoAcessosPage } from '@/pages/escola/controle/RevisaoAcessosPage'
 import { ObrigacoesPage } from '@/pages/escola/institucional/ObrigacoesPage'
 import { CalendarioPage } from '@/pages/escola/pedagogico/CalendarioPage'
 import { TurmaPedagogicaPage } from '@/pages/escola/pedagogico/TurmaPedagogicaPage'
@@ -85,6 +88,9 @@ export const router = createBrowserRouter([
       { path: 'config/usuarios', element: <UsuariosPage /> },
       { path: 'config/ano-letivo', element: <AnoLetivoPage /> },
       { path: 'config/materiais', element: <MateriaisPage /> },
+      { path: 'config/revisao-acessos', element: <RevisaoAcessosPage /> },
+      { path: 'aprovacoes', element: <AprovacoesPage /> },
+      { path: 'auditoria', element: <AuditoriaPage /> },
       { path: 'obrigacoes', element: <ObrigacoesPage /> },
       { path: 'pedagogico', element: <TurmasPedagogicasPage /> },
       { path: 'pedagogico/turmas/:id', element: <TurmaPedagogicaPage /> },

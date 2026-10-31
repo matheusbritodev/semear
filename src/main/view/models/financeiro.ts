@@ -160,3 +160,9 @@ export function formatarCompetencia(iso: string): string {
   const [ano, mes] = iso.split('-')
   return `${MESES[Number(mes) - 1]}/${ano}`
 }
+
+/** Resposta de PUT /bolsas/{id}: aplicada direto (solicitacao nula) ou enviada para aprovação. */
+export interface AlteracaoBolsa {
+  bolsa: Bolsa
+  solicitacao: import('./controle').Solicitacao | null
+}

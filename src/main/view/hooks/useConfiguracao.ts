@@ -64,7 +64,7 @@ export function useEditarAnoLetivo() {
 
 export function useEditarPrecos(ano?: number) {
   const cliente = useQueryClient()
-  const gravar = (lista: Awaited<ReturnType<typeof configuracaoService.precos>>) => cliente.setQueryData(['precos', ano], lista)
+  const gravar = () => void cliente.invalidateQueries({ queryKey: ['aprovacoes'] })
   return {
     salvar: useMutation({ mutationFn: configuracaoService.salvarPreco.bind(configuracaoService), onSuccess: gravar }),
     copiar: useMutation({

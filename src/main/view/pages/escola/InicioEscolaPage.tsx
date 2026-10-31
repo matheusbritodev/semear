@@ -10,6 +10,7 @@ import {
   Landmark,
   Minus,
   ShieldCheck,
+  Stamp,
   Student,
   Tray,
   type TipoIcone,
@@ -19,6 +20,7 @@ import { pode } from '@/auth/permissions'
 import { AlertasTurmas } from '@/components/comuns/AlertasTurmas'
 import { Card } from '@/components/ui/Card'
 import { useAnoCorrente, useTurmas } from '@/hooks/useAcademico'
+import { useResumoAprovacoes } from '@/hooks/useControle'
 import { useInadimplencia } from '@/hooks/useFinanceiro'
 import { useAlertasObrigacoes } from '@/hooks/useObrigacoes'
 import { useResumoPendencias } from '@/hooks/usePendencias'
@@ -45,6 +47,8 @@ export function InicioEscolaPage() {
   const inadimplencia = useInadimplencia(veFinanceiro)
   const veObrigacoes = pode(sessao, 'OBRIGACOES', 'LER')
   const obrigacoes = useAlertasObrigacoes(veObrigacoes)
+  const decideAprovacoes = pode(sessao, 'APROVACOES', 'GRAVAR')
+  const aprovacoes = useResumoAprovacoes(decideAprovacoes)
 
   if (!sessao?.perfil) return null
   const primeiroNome = sessao.nome?.split(' ')[0]
@@ -94,6 +98,15 @@ export function InicioEscolaPage() {
       )}
 
       <AlertasTurmas />
+
+      {decideAprovacoes && aprovacoes.data && aprovacoes.data.pendentes > 0 && (
+        <Aviso tom="neutro" icone={Stamp} rota="/escola/aprovacoes" acao="Ver aprovações">
+          <strong className="font-semibold text-slate-900">
+            {aprovacoes.data.pendentes} {aprovacoes.data.pendentes === 1 ? 'pedido aguardando' : 'pedidos aguardando'} aprovação
+          </strong>{' '}
+          (bolsas e preços só valem depois que uma segunda pessoa aprova).
+        </Aviso>
+      )}
 
       {vePendencias && pendencias.data && pendencias.data.alunosComPendencia > 0 && (
         <Aviso tom="vermelho" icone={FileWarning} rota="/escola/pendencias" acao="Ver pendências">

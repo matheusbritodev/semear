@@ -6,13 +6,18 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Modal } from '@/components/ui/Modal'
 import { Select } from '@/components/ui/Select'
+import { CartaoSolicitacao } from '@/components/controle/CartaoSolicitacao'
+import { useAprovacoes } from '@/hooks/useControle'
 import { useBolsas, useBolsasDaMatricula, useConcederBolsa, useRevogarBolsa } from '@/hooks/useFinanceiro'
 import { usePermissao } from '@/hooks/useUtilitarios'
 import { ApiError } from '@/lib/ApiError'
 import { formatarData } from '@/lib/formatters'
 import { descreverDesconto, type Concessao } from '@/models/financeiro'
 
-/** Bolsas da matrícula (RN11): conceder e revogar. O banco recalcula as cobranças em aberto na hora. */
+/**
+ * Bolsas da matrícula (RN11). Conceder vira pedido que outra pessoa aprova (segregação de funções);
+ * revogar vale na hora. O banco recalcula as cobranças em aberto quando a bolsa entra ou sai.
+ */
 export function BolsasDaMatricula({ matriculaId, vigente }: { matriculaId: string; vigente: boolean }) {
   const podeVer = usePermissao('BOLSAS', 'LER')
   const podeEditar = usePermissao('BOLSAS', 'GRAVAR')
@@ -23,6 +28,9 @@ export function BolsasDaMatricula({ matriculaId, vigente }: { matriculaId: strin
   const [escolhendo, setEscolhendo] = useState(false)
   const [bolsaId, setBolsaId] = useState('')
   const [revogando, setRevogando] = useState<Concessao | null>(null)
+  const podeVerPedidos = usePermissao('APROVACOES', 'LER') || podeEditar
+  const pedidos = useAprovacoes('PENDENTE', podeVer && podeVerPedidos)
+  const pendentes = (pedidos.data ?? []).filter((p) => p.matriculaId === matriculaId)
 
   if (!podeVer) return null
 
@@ -63,9 +71,23 @@ export function BolsasDaMatricula({ matriculaId, vigente }: { matriculaId: strin
               ))}
             </ul>
           )}
+          {pendentes.length > 0 && (
+            <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50/60 px-3">
+              <ul className="divide-y divide-amber-100">
+                {pendentes.map((p) => (
+                  <CartaoSolicitacao key={p.id} s={p} compacto />
+                ))}
+              </ul>
+            </div>
+          )}
+          {conceder.isSuccess && (
+            <p role="status" className="mt-3 text-sm text-semear-700">
+              Pedido enviado. A bolsa entra nas cobranças quando outra pessoa aprovar.
+            </p>
+          )}
           {podeEditar && vigente && (
             <Button variante="secundario" className="mt-3" onClick={() => setEscolhendo(true)} disabled={tipos.isSuccess && disponiveis.length === 0}>
-              <Plus className="size-4" aria-hidden /> Conceder bolsa
+              <Plus className="size-4" aria-hidden /> Pedir bolsa
             </Button>
           )}
           {erro && (
@@ -78,7 +100,7 @@ export function BolsasDaMatricula({ matriculaId, vigente }: { matriculaId: strin
 
       <Modal
         aberto={escolhendo}
-        titulo="Conceder bolsa"
+        titulo="Pedir bolsa"
         aoFechar={() => setEscolhendo(false)}
         rodape={
           <>
@@ -90,7 +112,7 @@ export function BolsasDaMatricula({ matriculaId, vigente }: { matriculaId: strin
               carregando={conceder.isPending}
               onClick={() => conceder.mutate(bolsaId, { onSuccess: () => (setEscolhendo(false), setBolsaId('')) })}
             >
-              Conceder
+              Enviar para aprovação
             </Button>
           </>
         }
@@ -105,8 +127,8 @@ export function BolsasDaMatricula({ matriculaId, vigente }: { matriculaId: strin
             ))}
           </Select>
           <p className="text-sm text-slate-600">
-            Vale de hoje (ou do início do ano letivo) até o fim do ano letivo. As cobranças mensais em aberto são recalculadas na hora; as pagas
-            não mudam.
+            Outra pessoa da equipe precisa aprovar (quem pede não aprova). Depois de aprovada, vale de hoje (ou do início do ano letivo) até o fim
+            do ano letivo; as cobranças mensais em aberto são recalculadas e as pagas não mudam.
           </p>
         </div>
       </Modal>

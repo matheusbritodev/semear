@@ -42,6 +42,7 @@ export {
   Shapes,
   ShieldCheck,
   SquaresFour,
+  Stamp,
   Star,
   Student,
   Sun,
@@ -87,4 +88,5 @@ export {
   Trash as Trash2,
   UploadSimple as Upload,
   UserMinus as UserX,
+  ShieldWarning as ShieldAlert,
 } from '@phosphor-icons/react'

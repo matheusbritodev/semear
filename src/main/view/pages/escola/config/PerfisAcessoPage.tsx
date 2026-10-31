@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { RotateCcw } from '@/components/ui/icones'
 import { Carregando, EstadoErro } from '@/components/comuns/Estados'
+import { PainelSegregacao } from '@/components/controle/PainelSegregacao'
 import { PageHeader } from '@/components/comuns/PageHeader'
 import { Tabela, Td, Th, Tr } from '@/components/comuns/Tabela'
 import { Button } from '@/components/ui/Button'
@@ -162,8 +163,11 @@ export function PerfisAcessoPage() {
         </Tabela>
       </div>
       <p className="mt-3 text-xs text-slate-500">
-        “Alterar” já inclui consultar. Configurações e Usuários ficam sempre liberados para a Administração.
+        “Alterar” já inclui consultar. Configurações e Usuários ficam sempre liberados para a Administração. Auditoria é sempre só
+        consulta.
       </p>
+
+      <PainelSegregacao />
 
       <Modal
         aberto={confirmarPadrao}

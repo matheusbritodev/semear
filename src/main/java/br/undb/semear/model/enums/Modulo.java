@@ -15,5 +15,9 @@ public enum Modulo {
     OBRIGACOES,
     PORTAL,
     /** Painel geral de pendências dos alunos (documentos), pedido pelo professor em 28/10/2026. */
-    PENDENCIAS
+    PENDENCIAS,
+    /** Caixa de aprovações: decidir pedidos que exigem uma segunda pessoa (SoD, 31/10/2026). */
+    APROVACOES,
+    /** Trilha de auditoria e verificação de integridade (SOX). Somente leitura. */
+    AUDITORIA
 }

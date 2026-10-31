@@ -9,7 +9,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.undb.semear.dto.controle.ControleDtos.ConflitoSodResponse;
+import br.undb.semear.dto.controle.ControleDtos.PoliticaSodResponse;
+import br.undb.semear.dto.controle.ControleDtos.RegraSodResponse;
 import br.undb.semear.dto.pessoa.PermissaoDtos.AlterarPermissaoRequest;
+import br.undb.semear.model.entity.controle.PoliticaSegregacao;
 import br.undb.semear.dto.pessoa.PermissaoDtos.MatrizResponse;
 import br.undb.semear.model.enums.Modulo;
 import br.undb.semear.model.enums.PerfilUsuario;
@@ -31,6 +35,17 @@ public class PermissaoController {
     @PreAuthorize("@permissoes.pode('CONFIGURACOES', 'LER')")
     public MatrizResponse matriz() {
         return MatrizResponse.de(permissoes.matriz());
+    }
+
+    /** Matriz de funções incompatíveis e os conflitos atuais (inclusive a exceção documentada do ADMIN). */
+    @GetMapping("/segregacao")
+    @PreAuthorize("@permissoes.pode('CONFIGURACOES', 'LER') or @permissoes.pode('USUARIOS', 'LER')")
+    public PoliticaSodResponse segregacao() {
+        return new PoliticaSodResponse(
+                PoliticaSegregacao.REGRAS.stream().map(RegraSodResponse::de).toList(),
+                permissoes.matriz().conflitos().stream().map(ConflitoSodResponse::de).toList(),
+                PoliticaSegregacao.PERFIL_PRIVILEGIADO,
+                "Dupla aprovação de bolsas e preços, trilha de auditoria imutável e revisão trimestral de acessos");
     }
 
     @PutMapping("/{perfil}/{modulo}")

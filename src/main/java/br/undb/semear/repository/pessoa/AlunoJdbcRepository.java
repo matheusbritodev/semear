@@ -37,28 +37,54 @@ public class AlunoJdbcRepository extends JdbcRepository<Aluno> implements AlunoR
     /** O aluno sempre vem completo, com os vínculos (responsáveis). */
     @Override
     protected Aluno mapear(ResultSet linha, int numeroLinha) throws SQLException {
-        Aluno aluno = new Aluno(
+        return new Aluno(
                 Colunas.uuid(linha, "id"),
                 linha.getLong("numero_cadastro"),
                 linha.getString("nome"),
                 Colunas.data(linha, "data_nascimento"),
                 Colunas.cpf(linha, "cpf"),
                 linha.getBoolean("ativo"));
-        jdbc.sql("""
-                        SELECT r.id, r.nome, r.cpf, r.telefone, r.email, r.usuario_id, ar.parentesco, ar.resp_financeiro
+    }
+
+    @Override
+    public java.util.Optional<Aluno> buscarPorId(UUID id) {
+        java.util.Optional<Aluno> aluno = super.buscarPorId(id);
+        aluno.ifPresent(a -> carregarResponsaveis(List.of(a)));
+        return aluno;
+    }
+
+    @Override
+    public List<Aluno> listar() {
+        List<Aluno> alunos = super.listar();
+        carregarResponsaveis(alunos);
+        return alunos;
+    }
+
+    /**
+     * Responsáveis de vários alunos numa consulta só, depois que a consulta dos alunos terminou.
+     * (Buscar dentro do mapeamento de cada linha segurava duas conexões ao mesmo tempo e esgotava o pool.)
+     */
+    private void carregarResponsaveis(List<Aluno> alunos) {
+        if (alunos.isEmpty()) {
+            return;
+        }
+        java.util.Map<UUID, Aluno> porId = new java.util.HashMap<>();
+        alunos.forEach(a -> porId.put(a.getId(), a));
+        executar(() -> jdbc.sql("""
+                        SELECT ar.aluno_id, r.id, r.nome, r.cpf, r.telefone, r.email, r.usuario_id, ar.parentesco, ar.resp_financeiro
                           FROM aluno_responsavel ar
                           JOIN responsavel r ON r.id = ar.responsavel_id
-                         WHERE ar.aluno_id = :id
+                         WHERE ar.aluno_id IN (:ids)
                          ORDER BY ar.resp_financeiro, r.nome
                         """)
-                .param("id", aluno.getId())
+                .param("ids", List.copyOf(porId.keySet()))
                 .query((rs, n) -> {
-                    aluno.vincularResponsavel(ResponsavelJdbcRepository.mapearResponsavel(rs),
-                            rs.getString("parentesco"), rs.getBoolean("resp_financeiro"));
+                    porId.get(rs.getObject("aluno_id", UUID.class)).vincularResponsavel(
+                            ResponsavelJdbcRepository.mapearResponsavel(rs), rs.getString("parentesco"),
+                            rs.getBoolean("resp_financeiro"));
                     return null;
                 })
-                .list();
-        return aluno;
+                .list());
     }
 
     @Override

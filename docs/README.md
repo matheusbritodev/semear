@@ -13,6 +13,7 @@ A aplicação segue o padrão **MVC**: **Model** e **Controller** em **Java**, *
 | 06 | [06-supabase-conexao.md](06-supabase-conexao.md) | Situação da conexão com o projeto Supabase e o que falta configurar |
 | 07 | [07-plano-e-convencoes.md](07-plano-e-convencoes.md) | Ordem de implementação, decisões pendentes, convenções de código |
 | 09 | [09-roteiro-demonstracao.md](09-roteiro-demonstracao.md) | Roteiro da apresentação, perfil por perfil |
+| 10 | [10-controles-internos.md](10-controles-internos.md) | Controles internos (SoD e SOX): dupla aprovação, funções incompatíveis, conflito de interesse, auditoria e revisão de acessos |
 | 08 | [08-entrega.md](08-entrega.md) | **Entrega:** requisitos atendidos, diagrama de classes, decisões, testes, LGPD e limitações |
 
 ## Fontes originais

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import br.undb.semear.model.entity.controle.PoliticaSegregacao;
 import br.undb.semear.model.enums.Modulo;
 import br.undb.semear.model.enums.PerfilUsuario;
 import br.undb.semear.model.exception.RegraNegocioException;
@@ -36,8 +37,31 @@ public final class MatrizPermissoes {
             throw new RegraNegocioException("PERMISSAO_ESSENCIAL",
                     "O perfil Administração precisa manter Configurações e Usuários para continuar gerenciando o sistema");
         }
+        if (modulo == Modulo.AUDITORIA && nova.podeGravar()) {
+            throw new RegraNegocioException("AUDITORIA_SOMENTE_LEITURA",
+                    "A trilha de auditoria é somente leitura: ninguém pode alterá-la");
+        }
+        Permissao anterior = matriz.get(perfil).get(modulo);
         matriz.get(perfil).put(modulo, nova);
+        try {
+            // SoD: a mudança não pode deixar o perfil com funções incompatíveis.
+            PoliticaSegregacao.exigirSemConflito(perfil, matriz.get(perfil).values());
+        } catch (RegraNegocioException e) {
+            if (anterior == null) {
+                matriz.get(perfil).remove(modulo);
+            } else {
+                matriz.get(perfil).put(modulo, anterior);
+            }
+            throw e;
+        }
         return nova;
+    }
+
+    /** Conflitos de SoD de todos os perfis, inclusive as exceções documentadas do ADMIN. */
+    public List<PoliticaSegregacao.Conflito> conflitos() {
+        return Arrays.stream(PerfilUsuario.values())
+                .flatMap(p -> PoliticaSegregacao.conflitos(p, doPerfil(p)).stream())
+                .toList();
     }
 
     public Optional<Permissao> buscar(PerfilUsuario perfil, Modulo modulo) {
